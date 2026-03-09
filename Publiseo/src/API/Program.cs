@@ -1,0 +1,54 @@
+using System.Text;
+using API.Configuration;
+using API.Middleware;
+using Application.Extensions;
+using Infrastructure.Configurations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
+var configuration = builder.Configuration;
+
+builder.Services.AddApiConfig(configuration);
+builder.Services.AddInfrastructure(configuration);
+builder.Services.AddApplication();
+
+var jwtSecret = configuration["Jwt:Secret"] ?? "";
+var jwtKey = Encoding.UTF8.GetBytes(string.IsNullOrEmpty(jwtSecret) ? "CHANGE_ME_MIN_32_CHARS_FOR_HS256!" : jwtSecret);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
+            ValidateIssuer = true,
+            ValidIssuer = configuration["Jwt:Issuer"] ?? "Publiseo",
+            ValidateAudience = true,
+            ValidAudience = configuration["Jwt:Audience"] ?? "Publiseo",
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+builder.Services.AddAuthorization();
+
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
+var app = builder.Build();
+
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+    app.Urls.Add($"http://0.0.0.0:{port}");
+
+app.UseCors("CorsPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseApiConfig(app.Environment);
+app.MapControllers();
+
+await app.RunAsync();
