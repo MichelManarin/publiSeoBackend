@@ -42,7 +42,7 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
         {
             BadRequestException => StatusCodes.Status400BadRequest,
             NotFoundException => StatusCodes.Status404NotFound,
-            ValidationException => StatusCodes.Status422UnprocessableEntity,
+            ValidationException => StatusCodes.Status400BadRequest,
             NotAcceptableException => StatusCodes.Status406NotAcceptable,
             _ => StatusCodes.Status500InternalServerError
         };
