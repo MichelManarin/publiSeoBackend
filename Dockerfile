@@ -1,11 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY src/ ./src/
-WORKDIR /src/src
+COPY Publiseo/ ./Publiseo/
+WORKDIR /src/Publiseo
 
-RUN dotnet restore webapi.sln
-RUN dotnet publish webapi.sln -c Release -o /app/out --no-restore
+RUN dotnet restore Publiseo.sln
+RUN dotnet publish src/API/API.csproj -c Release -o /app/out --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
