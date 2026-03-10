@@ -41,6 +41,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IBlogRepository, BlogRepository>();
         services.AddScoped<IBlogMembroRepository, BlogMembroRepository>();
+        services.AddScoped<IArtigoRepository, ArtigoRepository>();
 
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         services.AddScoped<IPasswordHasher, PasswordHasher>();

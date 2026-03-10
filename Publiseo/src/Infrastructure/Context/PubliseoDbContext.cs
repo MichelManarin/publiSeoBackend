@@ -15,6 +15,7 @@ public class PubliseoDbContext : DbContext
     public DbSet<Blog> Blogs => Set<Blog>();
     public DbSet<BlogMembro> BlogMembros => Set<BlogMembro>();
     public DbSet<Dominio> Dominios => Set<Dominio>();
+    public DbSet<Artigo> Artigos => Set<Artigo>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
