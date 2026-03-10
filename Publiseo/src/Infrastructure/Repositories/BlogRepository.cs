@@ -16,6 +16,9 @@ public sealed class BlogRepository : IBlogRepository
     public async Task<Blog?> ObterPorIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _context.Blogs.Include(b => b.Usuario).FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
 
+    public async Task<Blog?> ObterPorExternalIdAsync(Guid externalId, CancellationToken cancellationToken = default)
+        => await _context.Blogs.FirstOrDefaultAsync(b => b.ExternalId == externalId, cancellationToken);
+
     public async Task<IReadOnlyList<Blog>> ListarPorUsuarioAsync(Guid usuarioId, CancellationToken cancellationToken = default)
         => await _context.Blogs
             .Where(b => b.UsuarioId == usuarioId || b.Membros.Any(m => m.UsuarioId == usuarioId))

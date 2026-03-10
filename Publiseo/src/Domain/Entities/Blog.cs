@@ -7,6 +7,8 @@ namespace Domain.Entities;
 public class Blog
 {
     public Guid Id { get; set; }
+    /// <summary>Identificador público do blog para expor conteúdo (ex.: feed/artigos) sem expor o Id interno.</summary>
+    public Guid ExternalId { get; set; }
     /// <summary>Dono do blog (quem criou). Mantido para acesso direto; membros em BlogMembro.</summary>
     public Guid UsuarioId { get; set; }
     public string Nome { get; set; } = string.Empty;

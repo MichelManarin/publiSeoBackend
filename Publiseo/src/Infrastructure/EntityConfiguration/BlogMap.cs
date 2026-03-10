@@ -13,6 +13,9 @@ public class BlogMap : IEntityTypeConfiguration<Blog>
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.ExternalId).IsRequired();
+        builder.HasIndex(x => x.ExternalId).IsUnique();
+
         builder.Property(x => x.UsuarioId).IsRequired();
         builder.Property(x => x.Nome).HasMaxLength(300).IsRequired();
         builder.Property(x => x.UrlSlug).HasMaxLength(300);

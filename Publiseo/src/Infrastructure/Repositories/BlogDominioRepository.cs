@@ -16,6 +16,14 @@ public sealed class BlogDominioRepository : IBlogDominioRepository
     public async Task<BlogDominio?> ObterPorIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await _context.BlogDominios.FindAsync([id], cancellationToken);
 
+    public async Task<BlogDominio?> ObterPorNomeDominioAsync(string nomeDominio, CancellationToken cancellationToken = default)
+    {
+        var normalizado = nomeDominio.Trim().ToLowerInvariant();
+        return await _context.BlogDominios
+            .Include(x => x.Blog)
+            .FirstOrDefaultAsync(x => x.NomeDominio == normalizado, cancellationToken);
+    }
+
     public async Task<BlogDominio?> ObterPorBlogENomeAsync(Guid blogId, string nomeDominio, CancellationToken cancellationToken = default)
         => await _context.BlogDominios
             .FirstOrDefaultAsync(x => x.BlogId == blogId && x.NomeDominio == nomeDominio, cancellationToken);

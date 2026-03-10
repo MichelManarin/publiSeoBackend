@@ -19,6 +19,12 @@ public sealed class ArtigoRepository : IArtigoRepository
             .Include(a => a.UltimoUsuario)
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
+    public async Task<int> ContarPorBlogIdsAsync(IReadOnlyList<Guid> blogIds, CancellationToken cancellationToken = default)
+    {
+        if (blogIds.Count == 0) return 0;
+        return await _context.Artigos.CountAsync(a => blogIds.Contains(a.BlogId), cancellationToken);
+    }
+
     public async Task<IReadOnlyList<Artigo>> ListarPorBlogAsync(Guid blogId, CancellationToken cancellationToken = default)
         => await _context.Artigos
             .Where(a => a.BlogId == blogId)

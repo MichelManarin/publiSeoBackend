@@ -38,6 +38,7 @@ public sealed class CriarBlogCommandHandler : IRequestHandler<CriarBlogCommand, 
         var blog = new Domain.Entities.Blog
         {
             Id = Guid.NewGuid(),
+            ExternalId = Guid.NewGuid(),
             UsuarioId = request.UsuarioId,
             Nome = request.Nome.Trim(),
             Nicho = request.Nicho.Trim(),
@@ -59,6 +60,7 @@ public sealed class CriarBlogCommandHandler : IRequestHandler<CriarBlogCommand, 
 
         return new BlogResponse(
             blog.Id,
+            blog.ExternalId,
             blog.UsuarioId,
             blog.Nome,
             blog.UrlSlug,
