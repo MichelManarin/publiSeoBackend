@@ -53,6 +53,7 @@ public static class DependencyInjectionConfig
         services.AddTransient<IDominioAdapter>(sp => sp.GetRequiredService<GoDaddyDominioAdapter>());
 
         services.AddScoped<IDominioRepository, DominioRepository>();
+        services.AddScoped<IBlogDominioRepository, BlogDominioRepository>();
 
         return services;
     }

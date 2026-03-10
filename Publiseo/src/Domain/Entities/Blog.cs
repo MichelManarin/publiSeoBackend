@@ -19,6 +19,8 @@ public class Blog
 
     public Usuario Usuario { get; set; } = null!;
     public ICollection<BlogMembro> Membros { get; set; } = new List<BlogMembro>();
+    /// <summary>Domínios configurados para este blog (um blog pode ter vários).</summary>
+    public ICollection<BlogDominio> Dominios { get; set; } = new List<BlogDominio>();
 }
 
 [ExcludeFromCodeCoverage]
