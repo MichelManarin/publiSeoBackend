@@ -26,6 +26,7 @@ public sealed class ObterBlogPorDominioQueryHandler : IRequestHandler<ObterBlogP
         var blogDominio = await _blogDominioRepository.ObterPorNomeDominioAsync(request.Dominio, cancellationToken);
         if (blogDominio?.Blog == null)
             return null;
-        return new BlogPorDominioResponse(blogDominio.Blog.ExternalId);
+        var blog = blogDominio.Blog;
+        return new BlogPorDominioResponse(blog.ExternalId, blog.Nome, blog.Nicho);
     }
 }
