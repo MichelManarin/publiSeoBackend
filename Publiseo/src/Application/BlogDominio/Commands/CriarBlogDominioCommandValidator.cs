@@ -6,6 +6,7 @@ public sealed class CriarBlogDominioCommandValidator : AbstractValidator<CriarBl
 {
     public CriarBlogDominioCommandValidator()
     {
+        RuleFor(x => x.UsuarioId).NotEmpty().WithMessage("Usuário é obrigatório.");
         RuleFor(x => x.BlogId).NotEmpty().WithMessage("Blog é obrigatório.");
         RuleFor(x => x.NomeDominio)
             .NotEmpty().WithMessage("Nome do domínio é obrigatório.")

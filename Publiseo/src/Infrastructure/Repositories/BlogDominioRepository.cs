@@ -40,4 +40,14 @@ public sealed class BlogDominioRepository : IBlogDominioRepository
         await _context.SaveChangesAsync(cancellationToken);
         return blogDominio;
     }
+
+    public async Task ExcluirAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var entity = await _context.BlogDominios.FindAsync([id], cancellationToken);
+        if (entity != null)
+        {
+            _context.BlogDominios.Remove(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+    }
 }

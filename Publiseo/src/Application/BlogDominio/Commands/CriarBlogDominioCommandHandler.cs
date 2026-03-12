@@ -22,14 +22,24 @@ public sealed class CriarBlogDominioCommandHandler : IRequestHandler<CriarBlogDo
 
     public async Task<BlogDominioResponse?> Handle(CriarBlogDominioCommand request, CancellationToken cancellationToken)
     {
-        var blog = await _blogRepository.ObterPorIdAsync(request.BlogId, cancellationToken);
-        if (blog == null)
+        var blogsDoUsuario = await _blogRepository.ListarPorUsuarioAsync(request.UsuarioId, cancellationToken);
+        var blogAlvo = blogsDoUsuario.FirstOrDefault(b => b.Id == request.BlogId);
+        if (blogAlvo == null)
             return null;
 
         var nomeDominio = request.NomeDominio.Trim().ToLowerInvariant();
-        var existente = await _blogDominioRepository.ObterPorBlogENomeAsync(request.BlogId, nomeDominio, cancellationToken);
-        if (existente != null)
+        var existenteNoMesmoBlog = await _blogDominioRepository.ObterPorBlogENomeAsync(request.BlogId, nomeDominio, cancellationToken);
+        if (existenteNoMesmoBlog != null)
             throw new BadRequestException($"O domínio {nomeDominio} já está vinculado a este blog.");
+
+        var existenteNaPlataforma = await _blogDominioRepository.ObterPorNomeDominioAsync(nomeDominio, cancellationToken);
+        if (existenteNaPlataforma != null)
+        {
+            var usuarioTemAcessoAoBlogDoDominio = blogsDoUsuario.Any(b => b.Id == existenteNaPlataforma.BlogId);
+            if (usuarioTemAcessoAoBlogDoDominio)
+                throw new BadRequestException($"O domínio já está vinculado ao blog com o nome {existenteNaPlataforma.Blog?.Nome ?? "N/A"}.");
+            throw new BadRequestException("O domínio já se encontra configurado para outro usuário.");
+        }
 
         var blogDominio = new Domain.Entities.BlogDominio
         {
