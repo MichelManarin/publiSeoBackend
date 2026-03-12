@@ -63,8 +63,8 @@ public sealed class ProcessarArtigosPendentesCommandHandler : IRequestHandler<Pr
                     : StatusGeracaoArtigo.Pendente;
                 artigo.DataAtualizacao = DateTime.UtcNow;
                 falha++;
-                _logger.LogWarning("Falha na geração por IA do artigo {ArtigoId}. Tentativa {Tentativa}/{MaxTentativas}.",
-                    artigo.Id, artigo.TentativasGeracao, _opcoes.MaxTentativas);
+                _logger.LogWarning("[INTEGRAÇÃO OPEN AI] Falha na geração do artigo {ArtigoId} (Título: {Titulo}). Tentativa {Tentativa}/{MaxTentativas}. Verifique os logs com prefixo [INTEGRAÇÃO OPEN AI] para detalhes.",
+                    artigo.Id, artigo.Titulo, artigo.TentativasGeracao, _opcoes.MaxTentativas);
             }
 
             await _artigoRepository.AtualizarAsync(artigo, cancellationToken);
