@@ -60,7 +60,8 @@ public static class DependencyInjectionConfig
 
         services.Configure<OpenAIOptions>(configuration.GetSection(OpenAIOptions.SectionName));
         services.Configure<ArtigoGeracaoOptions>(configuration.GetSection(ArtigoGeracaoOptions.SectionName));
-        services.AddHttpClient<OpenAIGeradorConteudoArtigoService>();
+        services.AddHttpClient<OpenAIGeradorConteudoArtigoService>()
+            .ConfigureHttpClient(client => client.Timeout = TimeSpan.FromMinutes(10));
         services.AddTransient<IGeradorConteudoArtigoService>(sp => sp.GetRequiredService<OpenAIGeradorConteudoArtigoService>());
 
         return services;
