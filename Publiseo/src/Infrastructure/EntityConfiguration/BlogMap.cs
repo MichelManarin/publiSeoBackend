@@ -20,6 +20,8 @@ public class BlogMap : IEntityTypeConfiguration<Blog>
         builder.Property(x => x.Nome).HasMaxLength(300).IsRequired();
         builder.Property(x => x.UrlSlug).HasMaxLength(300);
         builder.Property(x => x.Nicho).HasMaxLength(200).IsRequired();
+        builder.Property(x => x.Descricao).HasMaxLength(2000);
+        builder.Property(x => x.AutorPadraoNome).HasMaxLength(200);
         builder.Property(x => x.DataCriacao).IsRequired();
 
         builder.Property(x => x.PalavrasChave)

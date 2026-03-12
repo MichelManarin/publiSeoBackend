@@ -2,11 +2,12 @@ using FluentValidation;
 
 namespace Application.Blog.Commands;
 
-public sealed class CriarBlogCommandValidator : AbstractValidator<CriarBlogCommand>
+public sealed class EditarBlogCommandValidator : AbstractValidator<EditarBlogCommand>
 {
-    public CriarBlogCommandValidator()
+    public EditarBlogCommandValidator()
     {
         RuleFor(x => x.UsuarioId).NotEmpty().WithMessage("Usuário é obrigatório.");
+        RuleFor(x => x.BlogId).NotEmpty().WithMessage("Blog é obrigatório.");
         RuleFor(x => x.Nome).NotEmpty().WithMessage("Nome do blog é obrigatório.").MaximumLength(300);
         RuleFor(x => x.Nicho).NotEmpty().WithMessage("Nicho é obrigatório.").MaximumLength(200);
         RuleFor(x => x.PalavrasChave)

@@ -31,4 +31,11 @@ public sealed class BlogRepository : IBlogRepository
         await _context.SaveChangesAsync(cancellationToken);
         return blog;
     }
+
+    public async Task<Blog> AtualizarAsync(Blog blog, CancellationToken cancellationToken = default)
+    {
+        _context.Blogs.Update(blog);
+        await _context.SaveChangesAsync(cancellationToken);
+        return blog;
+    }
 }

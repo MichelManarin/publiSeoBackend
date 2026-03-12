@@ -12,11 +12,15 @@ public class Blog
     /// <summary>Dono do blog (quem criou). Mantido para acesso direto; membros em BlogMembro.</summary>
     public Guid UsuarioId { get; set; }
     public string Nome { get; set; } = string.Empty;
-    /// <summary>Domínio (pode ser vinculado depois).</summary>
+    /// <summary>Slug para URL amigável (ex.: meu-blog). Único por usuário. Usado em rotas/SEO.</summary>
     public string? UrlSlug { get; set; }
     public string Nicho { get; set; } = string.Empty;
+    /// <summary>Descrição do blog (opcional).</summary>
+    public string? Descricao { get; set; }
     /// <summary>Até 5 palavras-chave sobre os temas do blog.</summary>
     public List<string> PalavrasChave { get; set; } = new();
+    /// <summary>Nome do autor padrão dos posts (qualquer texto). Se vazio, usar o primeiro usuário vinculado ao blog ao exibir.</summary>
+    public string? AutorPadraoNome { get; set; }
     public DateTime DataCriacao { get; set; }
 
     public Usuario Usuario { get; set; } = null!;

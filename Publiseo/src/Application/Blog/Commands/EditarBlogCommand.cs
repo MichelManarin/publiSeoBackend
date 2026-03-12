@@ -3,8 +3,9 @@ using MediatR;
 
 namespace Application.Blog.Commands;
 
-public record CriarBlogCommand(
+public record EditarBlogCommand(
     Guid UsuarioId,
+    Guid BlogId,
     string Nome,
     string Nicho,
     IReadOnlyList<string> PalavrasChave,

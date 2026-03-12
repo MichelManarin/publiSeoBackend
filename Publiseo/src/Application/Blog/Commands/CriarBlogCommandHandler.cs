@@ -44,6 +44,8 @@ public sealed class CriarBlogCommandHandler : IRequestHandler<CriarBlogCommand, 
             Nicho = request.Nicho.Trim(),
             PalavrasChave = palavrasChave,
             UrlSlug = string.IsNullOrWhiteSpace(request.UrlSlug) ? null : request.UrlSlug.Trim().ToLowerInvariant(),
+            Descricao = string.IsNullOrWhiteSpace(request.Descricao) ? null : request.Descricao.Trim(),
+            AutorPadraoNome = string.IsNullOrWhiteSpace(request.AutorPadraoNome) ? null : request.AutorPadraoNome.Trim(),
             DataCriacao = DateTime.UtcNow
         };
         await _blogRepository.InserirAsync(blog, cancellationToken);
@@ -65,7 +67,9 @@ public sealed class CriarBlogCommandHandler : IRequestHandler<CriarBlogCommand, 
             blog.Nome,
             blog.UrlSlug,
             blog.Nicho,
+            blog.Descricao,
             blog.PalavrasChave,
+            blog.AutorPadraoNome,
             blog.DataCriacao);
     }
 }

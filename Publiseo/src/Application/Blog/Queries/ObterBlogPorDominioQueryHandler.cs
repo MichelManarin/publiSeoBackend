@@ -27,6 +27,6 @@ public sealed class ObterBlogPorDominioQueryHandler : IRequestHandler<ObterBlogP
         if (blogDominio?.Blog == null)
             return null;
         var blog = blogDominio.Blog;
-        return new BlogPorDominioResponse(blog.ExternalId, blog.Nome, blog.Nicho);
+        return new BlogPorDominioResponse(blog.ExternalId, blog.Nome, blog.Nicho, blog.Descricao);
     }
 }

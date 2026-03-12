@@ -8,4 +8,5 @@ public interface IBlogRepository
     Task<Blog?> ObterPorExternalIdAsync(Guid externalId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Blog>> ListarPorUsuarioAsync(Guid usuarioId, CancellationToken cancellationToken = default);
     Task<Blog> InserirAsync(Blog blog, CancellationToken cancellationToken = default);
+    Task<Blog> AtualizarAsync(Blog blog, CancellationToken cancellationToken = default);
 }

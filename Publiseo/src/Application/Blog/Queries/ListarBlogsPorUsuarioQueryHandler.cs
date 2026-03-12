@@ -15,6 +15,6 @@ public sealed class ListarBlogsPorUsuarioQueryHandler : IRequestHandler<ListarBl
     public async Task<IReadOnlyList<BlogResponse>> Handle(ListarBlogsPorUsuarioQuery request, CancellationToken cancellationToken)
     {
         var blogs = await _blogRepository.ListarPorUsuarioAsync(request.UsuarioId, cancellationToken);
-        return blogs.Select(b => new BlogResponse(b.Id, b.ExternalId, b.UsuarioId, b.Nome, b.UrlSlug, b.Nicho, b.PalavrasChave, b.DataCriacao)).ToList();
+        return blogs.Select(b => new BlogResponse(b.Id, b.ExternalId, b.UsuarioId, b.Nome, b.UrlSlug, b.Nicho, b.Descricao, b.PalavrasChave, b.AutorPadraoNome, b.DataCriacao)).ToList();
     }
 }

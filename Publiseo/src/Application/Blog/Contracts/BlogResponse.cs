@@ -7,5 +7,7 @@ public record BlogResponse(
     string Nome,
     string? UrlSlug,
     string Nicho,
+    string? Descricao,
     IReadOnlyList<string> PalavrasChave,
+    string? AutorPadraoNome,
     DateTime DataCriacao);
