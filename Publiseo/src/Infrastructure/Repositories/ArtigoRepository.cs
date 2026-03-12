@@ -26,9 +26,10 @@ public sealed class ArtigoRepository : IArtigoRepository
         return await _context.Artigos.CountAsync(a => blogIds.Contains(a.BlogId), cancellationToken);
     }
 
+    /// <summary>Lista artigos do blog para o dashboard (autenticado). Não inclui artigos com exclusão lógica (Excluido).</summary>
     public async Task<IReadOnlyList<Artigo>> ListarPorBlogAsync(Guid blogId, CancellationToken cancellationToken = default)
         => await _context.Artigos
-            .Where(a => a.BlogId == blogId)
+            .Where(a => a.BlogId == blogId && !a.Excluido)
             .Include(a => a.UltimoUsuario)
             .OrderByDescending(a => a.DataAtualizacao)
             .ToListAsync(cancellationToken);

@@ -2,6 +2,8 @@ using System.Text;
 using API.Configuration;
 using API.Jobs;
 using API.Middleware;
+using API.Services;
+using Application.Abstractions;
 using Application.Extensions;
 using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,6 +13,8 @@ using Quartz;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserIdProvider, CurrentUserIdProvider>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
 
