@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,14 @@ public sealed class ArtigoRepository : IArtigoRepository
             .Where(a => a.BlogId == blogId)
             .Include(a => a.UltimoUsuario)
             .OrderByDescending(a => a.DataAtualizacao)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Artigo>> ListarPendentesGeracaoAsync(int maxTentativas, CancellationToken cancellationToken = default)
+        => await _context.Artigos
+            .Where(a => a.TipoRascunho == TipoRascunho.IA
+                && a.StatusGeracao == StatusGeracaoArtigo.Pendente
+                && a.TentativasGeracao < maxTentativas)
+            .OrderBy(a => a.DataCriacao)
             .ToListAsync(cancellationToken);
 
     public async Task<Artigo> InserirAsync(Artigo artigo, CancellationToken cancellationToken = default)

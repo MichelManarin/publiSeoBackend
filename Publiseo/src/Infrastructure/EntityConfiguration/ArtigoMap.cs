@@ -19,6 +19,8 @@ public class ArtigoMap : IEntityTypeConfiguration<Artigo>
         builder.Property(x => x.MetaDescription).HasMaxLength(500);
         builder.Property(x => x.Conteudo).HasColumnType("text").IsRequired();
         builder.Property(x => x.TipoRascunho).IsRequired();
+        builder.Property(x => x.StatusGeracao);
+        builder.Property(x => x.TentativasGeracao).IsRequired();
         builder.Property(x => x.DataCriacao).IsRequired();
         builder.Property(x => x.DataAtualizacao).IsRequired();
         builder.Property(x => x.UltimoUsuarioId).IsRequired();

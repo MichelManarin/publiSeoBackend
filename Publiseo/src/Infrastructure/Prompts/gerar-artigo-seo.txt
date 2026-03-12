@@ -1,0 +1,38 @@
+TÓPICO={{TITULO}}, PALAVRA-CHAVE={{TITULO}}, NUMERO_DE_PALAVRAS={{NUMERO_PALAVRAS}}, PERSONA=Pessoa brasileira querendo se informar sobre o tema
+~A persona é apenas pra se basear, é a cara do publico-alvo
+
+~Com base na análise, crie um esboço detalhado com pelo menos 15 títulos e subtítulos (H1, H2, H3, H4) que abranjam completamente o TÓPICO. Certifique-se de que o esboço tenha um fluxo lógico e aborde as principais intenções do usuário.
+
+~Pesquise e liste 10 a 15 palavras-chave de cauda longa e termos LSI (Latent Semantic Indexing) relevantes para o TÓPICO. Planeje incorporá-los naturalmente ao longo do artigo.
+
+~Crie um título (H1) envolvente e otimizado para SEO que inclua a PALAVRA-CHAVE e atraia o PÚBLICO. Conte o número de caracteres e itere até que esteja abaixo de 60 caracteres para exibição ideal nos resultados de pesquisa.
+
+~Escreva uma introdução convincente (150 a 200 palavras) que prenda o leitor, apresente o TÓPICO e descreva o que o artigo abordará. Inclua naturalmente a PALAVRA-CHAVE.
+
+~Para cada seção principal (H2) no esboço: 1. Escreva 300 a 500 palavras de conteúdo informativo e aprofundado. 2. Inclua exemplos, dados ou estudos de caso relevantes encontrados na pesquisa na web e em [SITE]. 3. Incorpore naturalmente 1 a 2 palavras-chave de cauda longa ou termos LSI. 4. Garanta um tom de conversa que fale diretamente com o PÚBLICO. 5. Adicione uma visão ou perspectiva única não encontrada comumente em artigos concorrentes. Conte o número de palavras e itere até atingir pelo menos 350 palavras para cada seção.
+
+~Escreva uma seção "Principais pontos" ou "Considerações importantes" que resuma os principais insights do artigo em 5 a 7 marcadores.
+
+~Desenvolva uma conclusão sem chamar de conclusão (200 a 250 palavras) que resuma os pontos principais, reforce a mensagem principal e inclua uma chamada para ação relevante para o PÚBLICO.
+
+~Crie 5 a 10 perguntas frequentes exclusivas e relevantes relacionadas ao TÓPICO. Certifique-se de que as respostas sejam concisas, mas informativas, e incluam naturalmente palavras-chave de cauda longa.
+
+~Escreva uma mensagem personalizada solicitando feedback do leitor e incentivando compartilhamentos nas redes sociais. Inclua uma pergunta para aumentar o engajamento.
+
+~Pesquise o SITE em busca de páginas relevantes para este artigo, identifique links internos apropriados relevantes para este artigo. Adicione-os às citações no texto e à seção "Referências".
+
+~Revise todo o artigo para garantir a densidade ideal de palavras-chave (almeje 1 a 2% para PALAVRA-CHAVE), o uso adequado de títulos e a inclusão de palavras-chave de cauda longa. Verifique se o conteúdo mantém alta perplexidade e explosão, mantendo-se no tópico. Certifique-se de que o artigo esteja bem fundamentado em fatos.
+
+~Formate o artigo usando Markdown, garantindo que todos os títulos (H1, H2, H3, H4) e pontos importantes estejam devidamente estilizados. Use frases em negrito e itálico para ênfase onde apropriado.
+~ A persona é usada apenas para o publico alvo nao cite ela
+
+~Compile o artigo completo, incluindo o título, a introdução, o corpo principal com todas as seções, a conclusão, as perguntas frequentes e as referências. Certifique-se de que ele atenda ou exceda o NUMERO_DE_PALAVRAS, mantendo um conteúdo envolvente e de alta qualidade em todo o artigo.
+~ Anexarei o primeiro lugar do resultado do google para se ter como base, nao o copiei diretamente, mas tudo que ele trouxer temos que fazer tb o objetivo é roubar o primeiro lugar deles
+
+OUTPUT=O retorno deve conter apenas o html com formatação simples do artigo, não informando body, html e muito menos css, apenas as tags htmls uma apos a outra
+
+Exemplo:
+
+<h2>Subtitulo: Exemplode  subtitulo</h2>
+
+<p> Inciiando o paragrafo conforme tema </p>

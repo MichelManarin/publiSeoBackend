@@ -64,6 +64,20 @@ public class ArtigoController : ApiBaseController
             return StandardNotFound("Artigo ou usuário não encontrado.");
         return StandardOk(result);
     }
+
+    /// <summary>
+    /// Dispara o processamento dos artigos com geração por IA pendente (pode ser chamado manualmente ou pelo job).
+    /// </summary>
+    [HttpPost("processar-pendentes")]
+    [ProducesResponseType(typeof(ApiResponse<ProcessarArtigosPendentesResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ProcessarPendentes(CancellationToken cancellationToken)
+    {
+        if (UsuarioId == null)
+            return Unauthorized();
+        var result = await Mediator.Send(new ProcessarArtigosPendentesCommand(), cancellationToken);
+        return StandardOk(result);
+    }
 }
 
 public record CriarArtigoRequest(

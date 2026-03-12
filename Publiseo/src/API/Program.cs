@@ -1,10 +1,12 @@
 using System.Text;
 using API.Configuration;
+using API.Jobs;
 using API.Middleware;
 using Application.Extensions;
 using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddAuthorization();
+
+builder.Services.AddQuartz(q =>
+{
+    var jobKey = new JobKey("ProcessarArtigosPendentes");
+    q.AddJob<ProcessarArtigosPendentesJob>(opts => opts.WithIdentity(jobKey));
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("ProcessarArtigosPendentes-trigger")
+        .WithSimpleSchedule(x => x.WithIntervalInMinutes(5).RepeatForever()));
+});
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 

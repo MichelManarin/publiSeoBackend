@@ -45,6 +45,8 @@ public sealed class EditarArtigoCommandHandler : IRequestHandler<EditarArtigoCom
             artigo.MetaDescription,
             artigo.Conteudo,
             artigo.TipoRascunho,
+            artigo.StatusGeracao,
+            artigo.TentativasGeracao,
             artigo.DataCriacao,
             artigo.DataAtualizacao,
             artigo.UltimoUsuarioId);

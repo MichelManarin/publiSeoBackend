@@ -9,6 +9,8 @@ public record ArtigoResponse(
     string? MetaDescription,
     string Conteudo,
     TipoRascunho TipoRascunho,
+    StatusGeracaoArtigo? StatusGeracao,
+    int TentativasGeracao,
     DateTime DataCriacao,
     DateTime DataAtualizacao,
     Guid UltimoUsuarioId);

@@ -1,12 +1,14 @@
 using API.Contracts;
 using Application.Auth.Commands;
 using Application.Auth.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[AllowAnonymous]
 public class AuthController : ApiBaseController
 {
     /// <summary>

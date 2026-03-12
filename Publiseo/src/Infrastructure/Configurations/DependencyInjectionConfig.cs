@@ -1,3 +1,5 @@
+using Application.Artigo.Abstractions;
+using Application.Artigo.Options;
 using Application.Auth.Abstractions;
 using Application.Data;
 using Application.Dominio.Adapters;
@@ -7,6 +9,7 @@ using Infrastructure.Auth;
 using Infrastructure.Context;
 using Infrastructure.Data;
 using Infrastructure.GoDaddy;
+using Infrastructure.OpenAI;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +57,11 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IDominioRepository, DominioRepository>();
         services.AddScoped<IBlogDominioRepository, BlogDominioRepository>();
+
+        services.Configure<OpenAIOptions>(configuration.GetSection(OpenAIOptions.SectionName));
+        services.Configure<ArtigoGeracaoOptions>(configuration.GetSection(ArtigoGeracaoOptions.SectionName));
+        services.AddHttpClient<OpenAIGeradorConteudoArtigoService>();
+        services.AddTransient<IGeradorConteudoArtigoService>(sp => sp.GetRequiredService<OpenAIGeradorConteudoArtigoService>());
 
         return services;
     }

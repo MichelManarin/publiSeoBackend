@@ -12,6 +12,10 @@ public class Artigo
     public string? MetaDescription { get; set; }
     public string Conteudo { get; set; } = string.Empty;
     public TipoRascunho TipoRascunho { get; set; }
+    /// <summary>Status da geração por IA (apenas quando TipoRascunho == IA).</summary>
+    public StatusGeracaoArtigo? StatusGeracao { get; set; }
+    /// <summary>Número de tentativas de geração por IA (máx. 2).</summary>
+    public int TentativasGeracao { get; set; }
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }
     public Guid UltimoUsuarioId { get; set; }

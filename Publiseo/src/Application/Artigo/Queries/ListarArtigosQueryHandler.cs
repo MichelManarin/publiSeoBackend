@@ -22,6 +22,8 @@ public sealed class ListarArtigosQueryHandler : IRequestHandler<ListarArtigosQue
             a.MetaDescription,
             a.Conteudo,
             a.TipoRascunho,
+            a.StatusGeracao,
+            a.TentativasGeracao,
             a.DataCriacao,
             a.DataAtualizacao,
             a.UltimoUsuarioId)).ToList();
