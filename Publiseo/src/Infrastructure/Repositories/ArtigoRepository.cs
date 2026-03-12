@@ -54,4 +54,14 @@ public sealed class ArtigoRepository : IArtigoRepository
         await _context.SaveChangesAsync(cancellationToken);
         return artigo;
     }
+
+    public async Task ExcluirAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var artigo = await _context.Artigos.FindAsync([id], cancellationToken);
+        if (artigo != null)
+        {
+            _context.Artigos.Remove(artigo);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+    }
 }

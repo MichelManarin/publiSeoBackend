@@ -10,4 +10,5 @@ public interface IArtigoRepository
     Task<IReadOnlyList<Artigo>> ListarPendentesGeracaoAsync(int maxTentativas, CancellationToken cancellationToken = default);
     Task<Artigo> InserirAsync(Artigo artigo, CancellationToken cancellationToken = default);
     Task<Artigo> AtualizarAsync(Artigo artigo, CancellationToken cancellationToken = default);
+    Task ExcluirAsync(Guid id, CancellationToken cancellationToken = default);
 }

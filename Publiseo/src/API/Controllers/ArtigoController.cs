@@ -66,6 +66,23 @@ public class ArtigoController : ApiBaseController
     }
 
     /// <summary>
+    /// Exclui um artigo. Apenas usuários vinculados ao blog (dono ou membro) podem excluir.
+    /// </summary>
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Excluir(Guid id, CancellationToken cancellationToken)
+    {
+        if (UsuarioId == null)
+            return Unauthorized();
+        var excluido = await Mediator.Send(new ExcluirArtigoCommand(id, UsuarioId.Value), cancellationToken);
+        if (!excluido)
+            return StandardNotFound("Artigo não encontrado ou você não tem acesso.");
+        return NoContent();
+    }
+
+    /// <summary>
     /// Dispara o processamento dos artigos com geração por IA pendente (pode ser chamado manualmente ou pelo job).
     /// </summary>
     [HttpPost("processar-pendentes")]
