@@ -60,8 +60,10 @@ public static class DependencyInjectionConfig
 
         services.Configure<OpenAIOptions>(configuration.GetSection(OpenAIOptions.SectionName));
         services.Configure<ArtigoGeracaoOptions>(configuration.GetSection(ArtigoGeracaoOptions.SectionName));
+        // Timeout do HttpClient para OpenAI: sem isso o padrão do .NET é 100 segundos e a geração de artigo falha.
+        const int openAiHttpTimeoutMinutes = 10;
         services.AddHttpClient<OpenAIGeradorConteudoArtigoService>()
-            .ConfigureHttpClient(client => client.Timeout = TimeSpan.FromMinutes(10));
+            .ConfigureHttpClient(client => client.Timeout = TimeSpan.FromMinutes(openAiHttpTimeoutMinutes));
         services.AddTransient<IGeradorConteudoArtigoService>(sp => sp.GetRequiredService<OpenAIGeradorConteudoArtigoService>());
 
         return services;
