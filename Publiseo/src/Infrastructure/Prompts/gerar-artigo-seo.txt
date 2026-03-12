@@ -1,5 +1,6 @@
 TÓPICO={{TITULO}}, PALAVRA-CHAVE={{TITULO}}, NUMERO_DE_PALAVRAS={{NUMERO_PALAVRAS}}, PERSONA=Pessoa brasileira querendo se informar sobre o tema
-~A persona é apenas pra se basear, é a cara do publico-alvo
+~A persona é apenas pra se basear, é a cara do publico-alvo não se deve citar a persona no texto é apenas para a LLM saber o publico alvo
+mas não gerar o conteudo direcionado diretamente a este
 
 ~Com base na análise, crie um esboço detalhado com pelo menos 15 títulos e subtítulos (H1, H2, H3, H4) que abranjam completamente o TÓPICO. Certifique-se de que o esboço tenha um fluxo lógico e aborde as principais intenções do usuário.
 
