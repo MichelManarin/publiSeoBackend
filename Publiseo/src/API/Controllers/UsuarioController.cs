@@ -1,6 +1,7 @@
 using API.Contracts;
 using Application.Auth.Commands;
 using Application.Auth.Contracts;
+using Application.Auth.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,21 @@ namespace API.Controllers;
 [Authorize]
 public class UsuarioController : ApiBaseController
 {
+    /// <summary>
+    /// Obtém o perfil do usuário autenticado (identificado pelo token).
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<PerfilUsuarioResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ObterPerfil(CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ObterPerfilUsuarioQuery(), cancellationToken);
+        if (result == null)
+            return StandardNotFound("Usuário não encontrado.");
+        return StandardOk(result);
+    }
+
     /// <summary>
     /// Edita o perfil do usuário autenticado. Apenas o próprio usuário pode editar (identificado pelo token).
     /// </summary>
