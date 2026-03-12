@@ -67,7 +67,9 @@ public sealed class ProcessarArtigosPendentesCommandHandler : IRequestHandler<Pr
                     artigo.Id, artigo.Titulo, artigo.TentativasGeracao, _opcoes.MaxTentativas);
             }
 
-            await _artigoRepository.AtualizarAsync(artigo, cancellationToken);
+            // Usa None para garantir que o status (Concluido/Falha/Pendente) seja sempre persistido,
+            // mesmo se a request tiver sido cancelada (timeout ou cliente desconectado).
+            await _artigoRepository.AtualizarAsync(artigo, CancellationToken.None);
         }
 
         return new ProcessarArtigosPendentesResult(processados, sucesso, falha);

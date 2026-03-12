@@ -42,6 +42,7 @@ public sealed class ArtigoRepository : IArtigoRepository
             .OrderByDescending(a => a.DataAtualizacao)
             .ToListAsync(cancellationToken);
 
+    /// <summary>Lista artigos pendentes de geração por IA. Não inclui excluídos nem os que já excederam o limite de tentativas (TentativasGeracao &gt;= maxTentativas ficam de fora).</summary>
     public async Task<IReadOnlyList<Artigo>> ListarPendentesGeracaoAsync(int maxTentativas, CancellationToken cancellationToken = default)
         => await _context.Artigos
             .Where(a => !a.Excluido
