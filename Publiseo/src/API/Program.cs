@@ -53,6 +53,12 @@ builder.Services.AddQuartz(q =>
         .WithSimpleSchedule(x => x.WithIntervalInMinutes(5).RepeatForever()));
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
+// Permite injetar IScheduler no ArtigoController (disparo manual do job).
+builder.Services.AddScoped<IScheduler>(sp =>
+{
+    var factory = sp.GetRequiredService<ISchedulerFactory>();
+    return factory.GetScheduler().GetAwaiter().GetResult();
+});
 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
