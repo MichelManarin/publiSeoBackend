@@ -4,6 +4,7 @@ using Application.Artigo.Contracts;
 using Application.Artigo.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Quartz;
 
 namespace API.Controllers;
 
@@ -12,6 +13,13 @@ namespace API.Controllers;
 [Authorize]
 public class ArtigoController : ApiBaseController
 {
+    private const string ProcessarPendentesJobKey = "ProcessarArtigosPendentes";
+    private readonly IScheduler _scheduler;
+
+    public ArtigoController(IScheduler scheduler)
+    {
+        _scheduler = scheduler;
+    }
     [HttpGet("blog/{blogId}")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<ArtigoResponse>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -83,17 +91,20 @@ public class ArtigoController : ApiBaseController
     }
 
     /// <summary>
-    /// Dispara o processamento dos artigos com geração por IA pendente (pode ser chamado manualmente ou pelo job).
+    /// Dispara o job de processamento dos artigos com geração por IA pendente e retorna imediatamente (202). O processamento roda em background.
     /// </summary>
     [HttpPost("processar-pendentes")]
-    [ProducesResponseType(typeof(ApiResponse<ProcessarArtigosPendentesResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ProcessarPendentes(CancellationToken cancellationToken)
     {
         if (UsuarioId == null)
             return Unauthorized();
-        var result = await Mediator.Send(new ProcessarArtigosPendentesCommand(), cancellationToken);
-        return StandardOk(result);
+        await _scheduler.TriggerJob(new JobKey(ProcessarPendentesJobKey), cancellationToken);
+        return new ObjectResult(ApiResponse<object>.Ok(
+            new { message = "Processamento iniciado em background. Atualize a lista de artigos em alguns instantes." },
+            StatusCodes.Status202Accepted))
+            { StatusCode = StatusCodes.Status202Accepted };
     }
 }
 
