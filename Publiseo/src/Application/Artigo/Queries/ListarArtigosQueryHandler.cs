@@ -26,6 +26,7 @@ public sealed class ListarArtigosQueryHandler : IRequestHandler<ListarArtigosQue
             a.TentativasGeracao,
             a.DataCriacao,
             a.DataAtualizacao,
-            a.UltimoUsuarioId)).ToList();
+            a.UltimoUsuarioId,
+            a.Excluido)).ToList();
     }
 }

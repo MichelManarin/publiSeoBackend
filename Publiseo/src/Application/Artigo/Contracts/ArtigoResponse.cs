@@ -13,4 +13,5 @@ public record ArtigoResponse(
     int TentativasGeracao,
     DateTime DataCriacao,
     DateTime DataAtualizacao,
-    Guid UltimoUsuarioId);
+    Guid UltimoUsuarioId,
+    bool Excluido);

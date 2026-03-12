@@ -24,6 +24,7 @@ public class ArtigoMap : IEntityTypeConfiguration<Artigo>
         builder.Property(x => x.DataCriacao).IsRequired();
         builder.Property(x => x.DataAtualizacao).IsRequired();
         builder.Property(x => x.UltimoUsuarioId).IsRequired();
+        builder.Property(x => x.Excluido).IsRequired().HasDefaultValue(false);
 
         builder.HasOne(x => x.Blog)
             .WithMany()

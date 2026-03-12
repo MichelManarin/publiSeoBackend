@@ -49,6 +49,7 @@ public sealed class EditarArtigoCommandHandler : IRequestHandler<EditarArtigoCom
             artigo.TentativasGeracao,
             artigo.DataCriacao,
             artigo.DataAtualizacao,
-            artigo.UltimoUsuarioId);
+            artigo.UltimoUsuarioId,
+            artigo.Excluido);
     }
 }

@@ -63,6 +63,7 @@ public sealed class CriarArtigoCommandHandler : IRequestHandler<CriarArtigoComma
             artigo.TentativasGeracao,
             artigo.DataCriacao,
             artigo.DataAtualizacao,
-            artigo.UltimoUsuarioId);
+            artigo.UltimoUsuarioId,
+            false);
     }
 }

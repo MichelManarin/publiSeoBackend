@@ -33,9 +33,19 @@ public sealed class ArtigoRepository : IArtigoRepository
             .OrderByDescending(a => a.DataAtualizacao)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<Artigo>> ListarPublicosPorBlogAsync(Guid blogId, CancellationToken cancellationToken = default)
+        => await _context.Artigos
+            .Where(a => a.BlogId == blogId
+                && !a.Excluido
+                && (a.TipoRascunho != TipoRascunho.IA || a.StatusGeracao != StatusGeracaoArtigo.Falha))
+            .Include(a => a.UltimoUsuario)
+            .OrderByDescending(a => a.DataAtualizacao)
+            .ToListAsync(cancellationToken);
+
     public async Task<IReadOnlyList<Artigo>> ListarPendentesGeracaoAsync(int maxTentativas, CancellationToken cancellationToken = default)
         => await _context.Artigos
-            .Where(a => a.TipoRascunho == TipoRascunho.IA
+            .Where(a => !a.Excluido
+                && a.TipoRascunho == TipoRascunho.IA
                 && a.StatusGeracao == StatusGeracaoArtigo.Pendente
                 && a.TentativasGeracao < maxTentativas)
             .OrderBy(a => a.DataCriacao)
@@ -60,7 +70,8 @@ public sealed class ArtigoRepository : IArtigoRepository
         var artigo = await _context.Artigos.FindAsync([id], cancellationToken);
         if (artigo != null)
         {
-            _context.Artigos.Remove(artigo);
+            artigo.Excluido = true;
+            artigo.DataAtualizacao = DateTime.UtcNow;
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

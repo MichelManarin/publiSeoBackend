@@ -19,6 +19,8 @@ public class Artigo
     public DateTime DataCriacao { get; set; }
     public DateTime DataAtualizacao { get; set; }
     public Guid UltimoUsuarioId { get; set; }
+    /// <summary>Exclusão lógica: quando true, o artigo não aparece no endpoint público.</summary>
+    public bool Excluido { get; set; }
 
     public Blog Blog { get; set; } = null!;
     public Usuario UltimoUsuario { get; set; } = null!;

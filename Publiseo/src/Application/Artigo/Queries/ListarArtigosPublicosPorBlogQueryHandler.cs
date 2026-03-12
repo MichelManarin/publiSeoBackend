@@ -25,7 +25,7 @@ public sealed class ListarArtigosPublicosPorBlogQueryHandler : IRequestHandler<L
         if (blog == null)
             return null;
 
-        var artigos = await _artigoRepository.ListarPorBlogAsync(blog.Id, cancellationToken);
+        var artigos = await _artigoRepository.ListarPublicosPorBlogAsync(blog.Id, cancellationToken);
         return artigos.Select(a =>
         {
             var autor = a.UltimoUsuario != null

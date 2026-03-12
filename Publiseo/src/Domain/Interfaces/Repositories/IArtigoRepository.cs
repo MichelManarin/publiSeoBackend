@@ -7,6 +7,8 @@ public interface IArtigoRepository
     Task<Artigo?> ObterPorIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<int> ContarPorBlogIdsAsync(IReadOnlyList<Guid> blogIds, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Artigo>> ListarPorBlogAsync(Guid blogId, CancellationToken cancellationToken = default);
+    /// <summary>Lista artigos visíveis publicamente: não excluídos e não IA em falha.</summary>
+    Task<IReadOnlyList<Artigo>> ListarPublicosPorBlogAsync(Guid blogId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Artigo>> ListarPendentesGeracaoAsync(int maxTentativas, CancellationToken cancellationToken = default);
     Task<Artigo> InserirAsync(Artigo artigo, CancellationToken cancellationToken = default);
     Task<Artigo> AtualizarAsync(Artigo artigo, CancellationToken cancellationToken = default);
