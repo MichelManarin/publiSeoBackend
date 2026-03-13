@@ -26,11 +26,16 @@ public sealed class ListarArtigosPublicosPorBlogQueryHandler : IRequestHandler<L
             return null;
 
         var artigos = await _artigoRepository.ListarPublicosPorBlogAsync(blog.Id, cancellationToken);
+        var autorPadrao = string.IsNullOrWhiteSpace(blog.AutorPadraoNome)
+            ? null
+            : blog.AutorPadraoNome.Trim();
+
         return artigos.Select(a =>
         {
-            var autor = a.UltimoUsuario != null
+            var autor = autorPadrao ?? (a.UltimoUsuario != null
                 ? $"{a.UltimoUsuario.Nome.Trim()} {a.UltimoUsuario.Sobrenome?.Trim()}".Trim()
-                : string.Empty;
+                : string.Empty);
+
             return new ArtigoPublicoResponse(
                 a.Titulo,
                 a.MetaDescription,
