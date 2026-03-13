@@ -51,6 +51,11 @@ mas não gerar o conteudo direcionado diretamente a este
 ~Formate o artigo usando Markdown, garantindo que todos os títulos (H1, H2, H3, H4) e pontos importantes estejam devidamente estilizados. Use frases em negrito e itálico para ênfase onde apropriado.
 ~ A persona é usada apenas para o publico alvo nao cite ela
 
+~ Não gere esboço do artigo
+~ Não gere seção com palavras 
+~ Não gere seção com referencias
+
+
 ~Compile o artigo completo, incluindo o título, a introdução, o corpo principal com todas as seções, a conclusão, as perguntas frequentes e as referências. Certifique-se de que ele atenda ou exceda o NUMERO_DE_PALAVRAS, mantendo um conteúdo envolvente e de alta qualidade em todo o artigo.
 ~ Anexarei o primeiro lugar do resultado do google para se ter como base, nao o copiei diretamente, mas tudo que ele trouxer temos que fazer tb o objetivo é roubar o primeiro lugar deles
 
