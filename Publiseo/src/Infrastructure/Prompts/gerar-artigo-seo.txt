@@ -1,6 +1,30 @@
 TÓPICO={{TITULO}}, PALAVRA-CHAVE={{TITULO}}, NUMERO_DE_PALAVRAS={{NUMERO_PALAVRAS}}, PERSONA=Pessoa brasileira querendo se informar sobre o tema
+OBJETIVO_DO_BLOG={{OBJETIVO_BLOG}} ~Possíveis valores: Adsense, Saas, Informativo, Gerar Leads
+POSSUI_PRODUTO_VINCULADO={{POSSUI_PRODUTO}} ~Valores: S ou N
+DESCRICAO_PRODUTO={{DESCRICAO_PRODUTO}} ~Se POSSUI_PRODUTO_VINCULADO = N ou estiver vazio, ignore este campo.
 ~A persona é apenas pra se basear, é a cara do publico-alvo não se deve citar a persona no texto é apenas para a LLM saber o publico alvo
 mas não gerar o conteudo direcionado diretamente a este
+
+~Considere o OBJETIVO_DO_BLOG ao ajustar o tom, a profundidade dos exemplos e a chamada para ação:
+
+~Se OBJETIVO_DO_BLOG = "Adsense":
+- Priorize tempo de permanência, seções detalhadas e tópicos que gerem curiosidade.
+- Evite CTAs agressivos; foque em informar e manter o leitor navegando.
+~Se OBJETIVO_DO_BLOG = "Saas":
+- Mostre claramente como o problema do leitor é resolvido pelo produto/serviço descrito em DESCRICAO_PRODUTO.
+- Inclua CTAs para teste gratuito, demonstração ou assinatura.
+~Se OBJETIVO_DO_BLOG = "Informativo":
+- Foco máximo em qualidade de informação, neutralidade e aprofundamento.
+- Use CTAs mais suaves, como “continue aprendendo sobre…”.
+~Se OBJETIVO_DO_BLOG = "Gerar Leads":
+- Use um tom consultivo e persuasivo.
+- Insira CTAs para baixar material rico, falar com um especialista ou se cadastrar.
+
+~Se POSSUI_PRODUTO_VINCULADO = "S":
+- Use a DESCRICAO_PRODUTO como base para exemplos concretos no texto.
+- Mencione o produto/serviço de forma natural e contextual, evitando parecer apenas um anúncio.
+~Se POSSUI_PRODUTO_VINCULADO = "N":
+- Não invente um produto; mantenha o texto neutro sobre soluções genéricas.
 
 ~Com base na análise, crie um esboço detalhado com pelo menos 15 títulos e subtítulos (H1, H2, H3, H4) que abranjam completamente o TÓPICO. Certifique-se de que o esboço tenha um fluxo lógico e aborde as principais intenções do usuário.
 

@@ -31,6 +31,9 @@ public sealed class EditarBlogCommandHandler : IRequestHandler<EditarBlogCommand
         blog.UrlSlug = string.IsNullOrWhiteSpace(request.UrlSlug) ? null : request.UrlSlug.Trim().ToLowerInvariant();
         blog.Descricao = string.IsNullOrWhiteSpace(request.Descricao) ? null : request.Descricao.Trim();
         blog.AutorPadraoNome = string.IsNullOrWhiteSpace(request.AutorPadraoNome) ? null : request.AutorPadraoNome.Trim();
+        blog.ObjetivoFinal = string.IsNullOrWhiteSpace(request.ObjetivoFinal) ? null : request.ObjetivoFinal.Trim();
+        blog.PossuiProdutoVinculado = request.PossuiProdutoVinculado;
+        blog.DescricaoProdutoVinculado = string.IsNullOrWhiteSpace(request.DescricaoProdutoVinculado) ? null : request.DescricaoProdutoVinculado.Trim();
 
         await _blogRepository.AtualizarAsync(blog, cancellationToken);
 
@@ -44,6 +47,9 @@ public sealed class EditarBlogCommandHandler : IRequestHandler<EditarBlogCommand
             blog.Descricao,
             blog.PalavrasChave,
             blog.AutorPadraoNome,
+            blog.ObjetivoFinal,
+            blog.PossuiProdutoVinculado,
+            blog.DescricaoProdutoVinculado,
             blog.DataCriacao);
     }
 }

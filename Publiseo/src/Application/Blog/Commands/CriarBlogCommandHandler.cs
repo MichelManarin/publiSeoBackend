@@ -46,6 +46,9 @@ public sealed class CriarBlogCommandHandler : IRequestHandler<CriarBlogCommand, 
             UrlSlug = string.IsNullOrWhiteSpace(request.UrlSlug) ? null : request.UrlSlug.Trim().ToLowerInvariant(),
             Descricao = string.IsNullOrWhiteSpace(request.Descricao) ? null : request.Descricao.Trim(),
             AutorPadraoNome = string.IsNullOrWhiteSpace(request.AutorPadraoNome) ? null : request.AutorPadraoNome.Trim(),
+            ObjetivoFinal = string.IsNullOrWhiteSpace(request.ObjetivoFinal) ? null : request.ObjetivoFinal.Trim(),
+            PossuiProdutoVinculado = request.PossuiProdutoVinculado,
+            DescricaoProdutoVinculado = string.IsNullOrWhiteSpace(request.DescricaoProdutoVinculado) ? null : request.DescricaoProdutoVinculado.Trim(),
             DataCriacao = DateTime.UtcNow
         };
         await _blogRepository.InserirAsync(blog, cancellationToken);
@@ -70,6 +73,9 @@ public sealed class CriarBlogCommandHandler : IRequestHandler<CriarBlogCommand, 
             blog.Descricao,
             blog.PalavrasChave,
             blog.AutorPadraoNome,
+            blog.ObjetivoFinal,
+            blog.PossuiProdutoVinculado,
+            blog.DescricaoProdutoVinculado,
             blog.DataCriacao);
     }
 }

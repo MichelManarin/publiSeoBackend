@@ -16,5 +16,7 @@ public sealed class CriarBlogCommandValidator : AbstractValidator<CriarBlogComma
         RuleFor(x => x.UrlSlug).MaximumLength(300).When(x => !string.IsNullOrEmpty(x.UrlSlug));
         RuleFor(x => x.Descricao).MaximumLength(2000).When(x => !string.IsNullOrEmpty(x.Descricao));
         RuleFor(x => x.AutorPadraoNome).MaximumLength(200).When(x => !string.IsNullOrEmpty(x.AutorPadraoNome));
+        RuleFor(x => x.ObjetivoFinal).MaximumLength(100).When(x => !string.IsNullOrEmpty(x.ObjetivoFinal));
+        RuleFor(x => x.DescricaoProdutoVinculado).MaximumLength(2000).When(x => !string.IsNullOrEmpty(x.DescricaoProdutoVinculado));
     }
 }

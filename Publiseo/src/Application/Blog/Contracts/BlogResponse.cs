@@ -10,4 +10,7 @@ public record BlogResponse(
     string? Descricao,
     IReadOnlyList<string> PalavrasChave,
     string? AutorPadraoNome,
+    string? ObjetivoFinal,
+    bool? PossuiProdutoVinculado,
+    string? DescricaoProdutoVinculado,
     DateTime DataCriacao);

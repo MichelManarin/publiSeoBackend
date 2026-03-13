@@ -31,7 +31,13 @@ public sealed class OpenAIGeradorConteudoArtigoService : IGeradorConteudoArtigoS
         _logger = logger;
     }
 
-    public async Task<string?> GerarConteudoAsync(string titulo, int numeroPalavras, CancellationToken cancellationToken = default)
+    public async Task<string?> GerarConteudoAsync(
+        string titulo,
+        int numeroPalavras,
+        string? objetivoFinalBlog = null,
+        bool? possuiProdutoVinculado = null,
+        string? descricaoProdutoVinculado = null,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(_options.ApiKey))
         {
@@ -49,6 +55,28 @@ public sealed class OpenAIGeradorConteudoArtigoService : IGeradorConteudoArtigoS
         prompt = prompt
             .Replace("{{TITULO}}", titulo.Trim(), StringComparison.OrdinalIgnoreCase)
             .Replace("{{NUMERO_PALAVRAS}}", (numeroPalavras > 0 ? numeroPalavras : DefaultNumeroPalavras).ToString(), StringComparison.OrdinalIgnoreCase);
+
+        if (!string.IsNullOrWhiteSpace(objetivoFinalBlog)
+            && prompt.Contains("{{OBJETIVO_BLOG}}", StringComparison.OrdinalIgnoreCase))
+        {
+            prompt = prompt.Replace("{{OBJETIVO_BLOG}}", objetivoFinalBlog.Trim(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        if (possuiProdutoVinculado.HasValue
+            && prompt.Contains("{{POSSUI_PRODUTO}}", StringComparison.OrdinalIgnoreCase))
+        {
+            var valor = possuiProdutoVinculado.Value ? "S" : "N";
+            prompt = prompt.Replace("{{POSSUI_PRODUTO}}", valor, StringComparison.OrdinalIgnoreCase);
+        }
+
+        if (!string.IsNullOrWhiteSpace(descricaoProdutoVinculado)
+            && prompt.Contains("{{DESCRICAO_PRODUTO}}", StringComparison.OrdinalIgnoreCase))
+        {
+            var descricaoLimitada = descricaoProdutoVinculado.Length > 2000
+                ? descricaoProdutoVinculado[..2000]
+                : descricaoProdutoVinculado;
+            prompt = prompt.Replace("{{DESCRICAO_PRODUTO}}", descricaoLimitada.Trim(), StringComparison.OrdinalIgnoreCase);
+        }
 
         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _options.ApiKey);
         var request = new

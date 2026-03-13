@@ -21,6 +21,12 @@ public class Blog
     public List<string> PalavrasChave { get; set; } = new();
     /// <summary>Nome do autor padrão dos posts (qualquer texto). Se vazio, usar o primeiro usuário vinculado ao blog ao exibir.</summary>
     public string? AutorPadraoNome { get; set; }
+    /// <summary>Objetivo principal do blog (ex.: Adsense, Saas, Informativo, Gerar Leads).</summary>
+    public string? ObjetivoFinal { get; set; }
+    /// <summary>Indica se existe um produto/serviço vinculado ao blog para o qual o conteúdo deve apoiar.</summary>
+    public bool? PossuiProdutoVinculado { get; set; }
+    /// <summary>Descrição resumida do produto/serviço vinculado ao blog (até 2000 caracteres recomendados).</summary>
+    public string? DescricaoProdutoVinculado { get; set; }
     public DateTime DataCriacao { get; set; }
 
     public Usuario Usuario { get; set; } = null!;

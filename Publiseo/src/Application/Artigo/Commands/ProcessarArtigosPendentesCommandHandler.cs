@@ -45,7 +45,13 @@ public sealed class ProcessarArtigosPendentesCommandHandler : IRequestHandler<Pr
             await _artigoRepository.AtualizarAsync(artigo, cancellationToken);
 
             var numeroPalavras = _opcoes.NumeroPalavrasDefault > 0 ? _opcoes.NumeroPalavrasDefault : 500;
-            var conteudo = await _geradorConteudo.GerarConteudoAsync(artigo.Titulo, numeroPalavras, cancellationToken);
+            var conteudo = await _geradorConteudo.GerarConteudoAsync(
+                artigo.Titulo,
+                numeroPalavras,
+                artigo.Blog.ObjetivoFinal,
+                artigo.Blog.PossuiProdutoVinculado,
+                artigo.Blog.DescricaoProdutoVinculado,
+                cancellationToken);
 
             if (!string.IsNullOrWhiteSpace(conteudo))
             {

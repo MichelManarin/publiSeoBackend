@@ -50,6 +50,7 @@ public sealed class ArtigoRepository : IArtigoRepository
                 && a.TipoRascunho == TipoRascunho.IA
                 && a.StatusGeracao == StatusGeracaoArtigo.Pendente
                 && a.TentativasGeracao < maxTentativas)
+            .Include(a => a.Blog)
             .OrderBy(a => a.DataCriacao)
             .ToListAsync(cancellationToken);
 

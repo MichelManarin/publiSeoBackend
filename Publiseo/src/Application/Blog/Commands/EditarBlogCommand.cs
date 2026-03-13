@@ -11,4 +11,7 @@ public record EditarBlogCommand(
     IReadOnlyList<string> PalavrasChave,
     string? UrlSlug = null,
     string? Descricao = null,
-    string? AutorPadraoNome = null) : IRequest<BlogResponse?>;
+    string? AutorPadraoNome = null,
+    string? ObjetivoFinal = null,
+    bool? PossuiProdutoVinculado = null,
+    string? DescricaoProdutoVinculado = null) : IRequest<BlogResponse?>;

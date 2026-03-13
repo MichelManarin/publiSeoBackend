@@ -44,7 +44,10 @@ public class BlogController : ApiBaseController
             request.PalavrasChave ?? Array.Empty<string>(),
             request.UrlSlug,
             request.Descricao,
-            request.AutorPadraoNome), cancellationToken);
+            request.AutorPadraoNome,
+            request.ObjetivoFinal,
+            request.PossuiProdutoVinculado,
+            request.DescricaoProdutoVinculado), cancellationToken);
         if (result == null)
             return new ObjectResult(ApiResponse<object?>.Fail(StatusCodes.Status400BadRequest, "Usuário não encontrado."))
                 { StatusCode = StatusCodes.Status400BadRequest };
@@ -71,7 +74,10 @@ public class BlogController : ApiBaseController
             request.PalavrasChave ?? Array.Empty<string>(),
             request.UrlSlug,
             request.Descricao,
-            request.AutorPadraoNome), cancellationToken);
+            request.AutorPadraoNome,
+            request.ObjetivoFinal,
+            request.PossuiProdutoVinculado,
+            request.DescricaoProdutoVinculado), cancellationToken);
         if (result == null)
             return StandardNotFound("Blog não encontrado ou você não tem acesso.");
         return StandardOk(result);
@@ -81,9 +87,27 @@ public class BlogController : ApiBaseController
 /// <summary>
 /// Request para criação de blog. PalavrasChave: até 5 temas. AutorPadraoNome: nome do autor padrão dos posts (opcional).
 /// </summary>
-public record CriarBlogRequest(string Nome, string Nicho, IReadOnlyList<string>? PalavrasChave, string? UrlSlug = null, string? Descricao = null, string? AutorPadraoNome = null);
+public record CriarBlogRequest(
+    string Nome,
+    string Nicho,
+    IReadOnlyList<string>? PalavrasChave,
+    string? UrlSlug = null,
+    string? Descricao = null,
+    string? AutorPadraoNome = null,
+    string? ObjetivoFinal = null,
+    bool? PossuiProdutoVinculado = null,
+    string? DescricaoProdutoVinculado = null);
 
 /// <summary>
 /// Request para edição de blog. AutorPadraoNome: nome do autor padrão dos posts (opcional).
 /// </summary>
-public record EditarBlogRequest(string Nome, string Nicho, IReadOnlyList<string>? PalavrasChave, string? UrlSlug = null, string? Descricao = null, string? AutorPadraoNome = null);
+public record EditarBlogRequest(
+    string Nome,
+    string Nicho,
+    IReadOnlyList<string>? PalavrasChave,
+    string? UrlSlug = null,
+    string? Descricao = null,
+    string? AutorPadraoNome = null,
+    string? ObjetivoFinal = null,
+    bool? PossuiProdutoVinculado = null,
+    string? DescricaoProdutoVinculado = null);
