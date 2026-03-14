@@ -17,6 +17,8 @@ public class PubliseoDbContext : DbContext
     public DbSet<Dominio> Dominios => Set<Dominio>();
     public DbSet<BlogDominio> BlogDominios => Set<BlogDominio>();
     public DbSet<Artigo> Artigos => Set<Artigo>();
+    public DbSet<SearchConsoleMetrica> SearchConsoleMetricas => Set<SearchConsoleMetrica>();
+    public DbSet<SearchConsoleOAuth> SearchConsoleOAuth => Set<SearchConsoleOAuth>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

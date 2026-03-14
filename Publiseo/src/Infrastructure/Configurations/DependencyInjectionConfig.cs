@@ -4,6 +4,7 @@ using Application.Auth.Abstractions;
 using Application.Data;
 using Application.Dominio.Adapters;
 using Application.Dominio.Contracts;
+using Application.SearchConsole.Abstractions;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Auth;
 using Infrastructure.Context;
@@ -11,6 +12,7 @@ using Infrastructure.Data;
 using Infrastructure.GoDaddy;
 using Infrastructure.OpenAI;
 using Infrastructure.Repositories;
+using Infrastructure.SearchConsole;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,6 +59,12 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IDominioRepository, DominioRepository>();
         services.AddScoped<IBlogDominioRepository, BlogDominioRepository>();
+        services.AddScoped<ISearchConsoleMetricaRepository, SearchConsoleMetricaRepository>();
+
+        services.Configure<SearchConsoleOptions>(configuration.GetSection(SearchConsoleOptions.SectionName));
+        services.AddScoped<ISearchConsoleClient, GoogleSearchConsoleClient>();
+        services.AddScoped<IGoogleSearchConsoleOAuthService, GoogleSearchConsoleOAuthService>();
+        services.AddScoped<ISearchConsoleOAuthRepository, SearchConsoleOAuthRepository>();
 
         services.Configure<OpenAIOptions>(configuration.GetSection(OpenAIOptions.SectionName));
         services.Configure<ArtigoGeracaoOptions>(configuration.GetSection(ArtigoGeracaoOptions.SectionName));

@@ -34,6 +34,9 @@ public sealed class BlogDominioRepository : IBlogDominioRepository
             .OrderBy(x => x.NomeDominio)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<BlogDominio>> ListarTodosAsync(CancellationToken cancellationToken = default)
+        => await _context.BlogDominios.OrderBy(x => x.NomeDominio).ToListAsync(cancellationToken);
+
     public async Task<BlogDominio> InserirAsync(BlogDominio blogDominio, CancellationToken cancellationToken = default)
     {
         _context.BlogDominios.Add(blogDominio);

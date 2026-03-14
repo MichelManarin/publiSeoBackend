@@ -13,6 +13,7 @@ using Quartz;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserIdProvider, CurrentUserIdProvider>();
 builder.Services.AddEndpointsApiExplorer();
@@ -51,6 +52,13 @@ builder.Services.AddQuartz(q =>
         .ForJob(jobKey)
         .WithIdentity("ProcessarArtigosPendentes-trigger")
         .WithSimpleSchedule(x => x.WithIntervalInMinutes(5).RepeatForever()));
+
+    var gscJobKey = new JobKey("SincronizarSearchConsole");
+    q.AddJob<SincronizarSearchConsoleJob>(opts => opts.WithIdentity(gscJobKey));
+    q.AddTrigger(opts => opts
+        .ForJob(gscJobKey)
+        .WithIdentity("SincronizarSearchConsole-trigger")
+        .WithCronSchedule("0 0 4 * * ?")); // Todo dia às 4h da manhã (UTC)
 });
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 // Permite injetar IScheduler no ArtigoController (disparo manual do job).

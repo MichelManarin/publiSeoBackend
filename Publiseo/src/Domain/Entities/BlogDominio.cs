@@ -15,4 +15,5 @@ public class BlogDominio
     public string NomeDominio { get; set; } = string.Empty;
 
     public Blog Blog { get; set; } = null!;
+    public ICollection<SearchConsoleMetrica> MetricasSearchConsole { get; set; } = new List<SearchConsoleMetrica>();
 }

@@ -25,4 +25,6 @@ public class Usuario
 
     public ICollection<Blog> Blogs { get; set; } = new List<Blog>();
     public ICollection<BlogMembro> BlogMembros { get; set; } = new List<BlogMembro>();
+    /// <summary>Vínculo OAuth com Google Search Console (um por usuário).</summary>
+    public SearchConsoleOAuth? SearchConsoleOAuth { get; set; }
 }
