@@ -56,16 +56,31 @@ public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestH
             foreach (var dominio in dominios)
             {
                 dominiosProcessados++;
-                var dto = await _searchConsoleClient.ObterMetricasAgregadasAsync(
-                    dominio.NomeDominio,
-                    dataAlvo,
-                    TipoBuscaPadrao,
-                    oauth.RefreshToken,
-                    cancellationToken);
+                SearchConsoleMetricasDto? dto;
+                try
+                {
+                    dto = await _searchConsoleClient.ObterMetricasAgregadasAsync(
+                        dominio.NomeDominio,
+                        dataAlvo,
+                        TipoBuscaPadrao,
+                        oauth.RefreshToken,
+                        cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    falhas++;
+                    _logger.LogWarning(ex,
+                        "Sincronização Search Console por usuário: falha ao obter métricas para domínio {NomeDominio} em {Data} (usuário {UsuarioId}). Motivo: {Motivo}",
+                        dominio.NomeDominio, dataAlvo, request.UsuarioId, ex.Message);
+                    continue;
+                }
 
                 if (dto == null)
                 {
                     falhas++;
+                    _logger.LogWarning(
+                        "Sincronização Search Console por usuário: falha ao obter métricas para domínio {NomeDominio} em {Data} (usuário {UsuarioId}) — sem dados.",
+                        dominio.NomeDominio, dataAlvo, request.UsuarioId);
                     continue;
                 }
 

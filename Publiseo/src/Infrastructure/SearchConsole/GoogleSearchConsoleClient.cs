@@ -74,7 +74,7 @@ public sealed class GoogleSearchConsoleClient : ISearchConsoleClient
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Search Console: falha ao obter métricas para {SiteUrl} em {Data}.", siteUrl, data);
-            return null;
+            throw;
         }
     }
 
