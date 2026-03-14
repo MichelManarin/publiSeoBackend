@@ -141,20 +141,22 @@ public class SearchConsoleController : ApiBaseController
     }
 
     /// <summary>
-    /// Lista métricas do Search Console por blog (dados já sincronizados no banco, dia a dia).
-    /// Requer que o usuário tenha acesso ao blog. Período opcional; padrão: últimos 90 dias.
+    /// Lista métricas do Search Console (dados já sincronizados no banco).
+    /// Com blogId: métricas do blog, por domínio e dia. Sem blogId: métricas consolidadas de todos os blogs do usuário, por dia.
+    /// Período opcional; padrão: últimos 90 dias.
     /// </summary>
-    /// <param name="blogId">ID do blog.</param>
+    /// <param name="blogId">ID do blog (opcional). Se omitido, retorna dados consolidados de todos os blogs.</param>
     /// <param name="dataInicio">Início do período (opcional). Padrão: 90 dias atrás.</param>
     /// <param name="dataFim">Fim do período (opcional). Padrão: 2 dias atrás (último dia com dados no GSC).</param>
     [HttpGet("metrics")]
     [Authorize]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<SearchConsoleMetricaResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<SearchConsoleMetricaConsolidadaResponse>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListarMetricas(
-        [FromQuery] Guid blogId,
+        [FromQuery] Guid? blogId = null,
         [FromQuery] DateOnly? dataInicio = null,
         [FromQuery] DateOnly? dataFim = null,
         CancellationToken cancellationToken = default)
@@ -165,12 +167,21 @@ public class SearchConsoleController : ApiBaseController
         var inicio = dataInicio ?? fim.AddDays(-89);
         if (inicio > fim)
             return BadRequest(ApiResponse<object>.Fail(400, "dataInicio não pode ser maior que dataFim."));
-        var result = await Mediator.Send(
-            new ListarMetricasSearchConsolePorBlogQuery(UsuarioId.Value, blogId, inicio, fim),
+
+        if (blogId.HasValue)
+        {
+            var result = await Mediator.Send(
+                new ListarMetricasSearchConsolePorBlogQuery(UsuarioId.Value, blogId.Value, inicio, fim),
+                cancellationToken);
+            if (result == null)
+                return StandardNotFound("Blog não encontrado ou você não tem acesso.");
+            return StandardOk(result);
+        }
+
+        var consolidado = await Mediator.Send(
+            new ListarMetricasSearchConsoleConsolidadasQuery(UsuarioId.Value, inicio, fim),
             cancellationToken);
-        if (result == null)
-            return StandardNotFound("Blog não encontrado ou você não tem acesso.");
-        return StandardOk(result);
+        return StandardOk(consolidado);
     }
 
     /// <summary>

@@ -42,6 +42,19 @@ public sealed class SearchConsoleMetricaRepository : ISearchConsoleMetricaReposi
             .ThenBy(x => x.TipoBusca)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<SearchConsoleMetrica>> ListarPorBlogsAsync(IEnumerable<Guid> blogIds, DateOnly dataInicio, DateOnly dataFim, CancellationToken cancellationToken = default)
+    {
+        var ids = blogIds.ToList();
+        if (ids.Count == 0) return Array.Empty<SearchConsoleMetrica>();
+        return await _context.SearchConsoleMetricas
+            .AsNoTracking()
+            .Where(x => ids.Contains(x.BlogDominio.BlogId) && x.Data >= dataInicio && x.Data <= dataFim)
+            .Include(x => x.BlogDominio)
+            .OrderBy(x => x.Data)
+            .ThenBy(x => x.TipoBusca)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task InserirOuAtualizarAsync(SearchConsoleMetrica metrica, CancellationToken cancellationToken = default)
     {
         var existente = await ObterPorDominioDataETipoAsync(metrica.BlogDominioId, metrica.Data, metrica.TipoBusca, cancellationToken);
