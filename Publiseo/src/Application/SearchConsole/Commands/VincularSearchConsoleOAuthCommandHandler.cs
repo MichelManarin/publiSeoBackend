@@ -11,13 +11,16 @@ public sealed class VincularSearchConsoleOAuthCommandHandler : IRequestHandler<V
 {
     private readonly IGoogleSearchConsoleOAuthService _oauthService;
     private readonly ISearchConsoleOAuthRepository _oauthRepository;
+    private readonly IMediator _mediator;
 
     public VincularSearchConsoleOAuthCommandHandler(
         IGoogleSearchConsoleOAuthService oauthService,
-        ISearchConsoleOAuthRepository oauthRepository)
+        ISearchConsoleOAuthRepository oauthRepository,
+        IMediator mediator)
     {
         _oauthService = oauthService;
         _oauthRepository = oauthRepository;
+        _mediator = mediator;
     }
 
     public async Task<bool> Handle(VincularSearchConsoleOAuthCommand request, CancellationToken cancellationToken)
@@ -38,6 +41,9 @@ public sealed class VincularSearchConsoleOAuthCommandHandler : IRequestHandler<V
                 DataVinculo = DateTime.UtcNow
             };
             await _oauthRepository.InserirOuAtualizarAsync(oauth, cancellationToken);
+
+            await _mediator.Send(new SincronizarSearchConsolePorUsuarioCommand(request.UsuarioId), cancellationToken);
+
             return true;
         }
         catch

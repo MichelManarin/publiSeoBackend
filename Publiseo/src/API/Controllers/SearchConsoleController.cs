@@ -183,4 +183,24 @@ public class SearchConsoleController : ApiBaseController
             StatusCodes.Status202Accepted))
             { StatusCode = StatusCodes.Status202Accepted };
     }
+
+    /// <summary>
+    /// Sincroniza métricas do Search Console apenas para os domínios do usuário logado.
+    /// Use para "Atualizar métricas agora" sem esperar o job diário.
+    /// </summary>
+    [HttpPost("sincronizar-me")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<SincronizarSearchConsoleResult>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> SincronizarMe(
+        [FromQuery] DateOnly? dataAlvo,
+        CancellationToken cancellationToken)
+    {
+        if (UsuarioId == null)
+            return Unauthorized();
+        var result = await Mediator.Send(
+            new SincronizarSearchConsolePorUsuarioCommand(UsuarioId.Value, dataAlvo),
+            cancellationToken);
+        return StandardOk(result);
+    }
 }
