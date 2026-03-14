@@ -12,6 +12,8 @@ namespace Application.SearchConsole.Commands;
 public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestHandler<SincronizarSearchConsolePorUsuarioCommand, SincronizarSearchConsoleResult>
 {
     private const string TipoBuscaPadrao = "web";
+    private const int DiasAtrasPadrao = 2;
+    private const int PrimeiraSincronizacaoDias = 90;
     private readonly IBlogRepository _blogRepository;
     private readonly IBlogDominioRepository _blogDominioRepository;
     private readonly ISearchConsoleClient _searchConsoleClient;
@@ -37,7 +39,6 @@ public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestH
 
     public async Task<SincronizarSearchConsoleResult> Handle(SincronizarSearchConsolePorUsuarioCommand request, CancellationToken cancellationToken)
     {
-        var dataAlvo = request.DataAlvo ?? DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
         var oauth = await _oauthRepository.ObterPorUsuarioIdAsync(request.UsuarioId, cancellationToken);
         if (oauth == null)
         {
@@ -45,66 +46,95 @@ public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestH
             return new SincronizarSearchConsoleResult(0, 0, 0);
         }
 
+        var blogs = await _blogRepository.ListarPorUsuarioAsync(request.UsuarioId, cancellationToken);
+        var blogIds = blogs.Select(b => b.Id).ToList();
+        var primeiraSincronizacao = blogIds.Count > 0 && !await _metricaRepository.ExisteAlgumaMetricaParaBlogsAsync(blogIds, cancellationToken);
+
+        var dataPadrao = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-DiasAtrasPadrao));
+        var datasParaSincronizar = ObterDatasParaSincronizar(request.DataAlvo, dataPadrao, primeiraSincronizacao);
+
         var dominiosProcessados = 0;
         var metricasSalvas = 0;
         var falhas = 0;
 
-        var blogs = await _blogRepository.ListarPorUsuarioAsync(request.UsuarioId, cancellationToken);
-        foreach (var blog in blogs)
+        foreach (var dataAlvo in datasParaSincronizar)
         {
-            var dominios = await _blogDominioRepository.ListarPorBlogAsync(blog.Id, cancellationToken);
-            foreach (var dominio in dominios)
+            foreach (var blog in blogs)
             {
-                dominiosProcessados++;
-                SearchConsoleMetricasDto? dto;
-                try
+                var dominios = await _blogDominioRepository.ListarPorBlogAsync(blog.Id, cancellationToken);
+                foreach (var dominio in dominios)
                 {
-                    dto = await _searchConsoleClient.ObterMetricasAgregadasAsync(
-                        dominio.NomeDominio,
-                        dataAlvo,
-                        TipoBuscaPadrao,
-                        oauth.RefreshToken,
-                        cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    falhas++;
-                    _logger.LogWarning(ex,
-                        "Sincronização Search Console por usuário: falha ao obter métricas para domínio {NomeDominio} em {Data} (usuário {UsuarioId}). Motivo: {Motivo}",
-                        dominio.NomeDominio, dataAlvo, request.UsuarioId, ex.Message);
-                    continue;
-                }
+                    dominiosProcessados++;
+                    SearchConsoleMetricasDto? dto;
+                    try
+                    {
+                        dto = await _searchConsoleClient.ObterMetricasAgregadasAsync(
+                            dominio.NomeDominio,
+                            dataAlvo,
+                            TipoBuscaPadrao,
+                            oauth.RefreshToken,
+                            cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        falhas++;
+                        _logger.LogWarning(ex,
+                            "Sincronização Search Console por usuário: falha ao obter métricas para domínio {NomeDominio} em {Data} (usuário {UsuarioId}). Motivo: {Motivo}",
+                            dominio.NomeDominio, dataAlvo, request.UsuarioId, ex.Message);
+                        continue;
+                    }
 
-                if (dto == null)
-                {
-                    falhas++;
-                    _logger.LogWarning(
-                        "Sincronização Search Console por usuário: falha ao obter métricas para domínio {NomeDominio} em {Data} (usuário {UsuarioId}) — sem dados.",
-                        dominio.NomeDominio, dataAlvo, request.UsuarioId);
-                    continue;
-                }
+                    if (dto == null)
+                    {
+                        falhas++;
+                        _logger.LogWarning(
+                            "Sincronização Search Console por usuário: falha ao obter métricas para domínio {NomeDominio} em {Data} (usuário {UsuarioId}) — sem dados.",
+                            dominio.NomeDominio, dataAlvo, request.UsuarioId);
+                        continue;
+                    }
 
-                var metrica = new SearchConsoleMetrica
-                {
-                    Id = Guid.NewGuid(),
-                    BlogDominioId = dominio.Id,
-                    Data = dataAlvo,
-                    TipoBusca = TipoBuscaPadrao,
-                    Impressoes = dto.Impressoes,
-                    Cliques = dto.Cliques,
-                    Ctr = dto.Ctr,
-                    PosicaoMedia = dto.PosicaoMedia,
-                    DataSincronizacao = DateTime.UtcNow
-                };
-                await _metricaRepository.InserirOuAtualizarAsync(metrica, cancellationToken);
-                metricasSalvas++;
+                    var metrica = new SearchConsoleMetrica
+                    {
+                        Id = Guid.NewGuid(),
+                        BlogDominioId = dominio.Id,
+                        Data = dataAlvo,
+                        TipoBusca = TipoBuscaPadrao,
+                        Impressoes = dto.Impressoes,
+                        Cliques = dto.Cliques,
+                        Ctr = dto.Ctr,
+                        PosicaoMedia = dto.PosicaoMedia,
+                        DataSincronizacao = DateTime.UtcNow
+                    };
+                    await _metricaRepository.InserirOuAtualizarAsync(metrica, cancellationToken);
+                    metricasSalvas++;
+                }
             }
         }
 
         _logger.LogInformation(
-            "Sincronização Search Console (usuário {UsuarioId}): data={Data}, domínios={Dominios}, métricas salvas={Metricas}, falhas={Falhas}.",
-            request.UsuarioId, dataAlvo, dominiosProcessados, metricasSalvas, falhas);
+            "Sincronização Search Console (usuário {UsuarioId}): primeiraVez={PrimeiraVez}, datas={Datas}, domínios processados={Dominios}, métricas salvas={Metricas}, falhas={Falhas}.",
+            request.UsuarioId, primeiraSincronizacao, datasParaSincronizar.Count, dominiosProcessados, metricasSalvas, falhas);
 
         return new SincronizarSearchConsoleResult(dominiosProcessados, metricasSalvas, falhas);
+    }
+
+    /// <summary>
+    /// Retorna as datas a sincronizar: uma única data (2 dias atrás) ou os últimos 90 dias na primeira sincronização.
+    /// </summary>
+    private static IReadOnlyList<DateOnly> ObterDatasParaSincronizar(DateOnly? dataAlvoExplicita, DateOnly dataPadrao, bool primeiraSincronizacao)
+    {
+        if (dataAlvoExplicita.HasValue)
+            return new[] { dataAlvoExplicita.Value };
+
+        if (!primeiraSincronizacao)
+            return new[] { dataPadrao };
+
+        var hoje = DateOnly.FromDateTime(DateTime.UtcNow);
+        var dataInicio = hoje.AddDays(-PrimeiraSincronizacaoDias);
+        var dataFim = hoje.AddDays(-DiasAtrasPadrao);
+        var lista = new List<DateOnly>();
+        for (var d = dataInicio; d <= dataFim; d = d.AddDays(1))
+            lista.Add(d);
+        return lista;
     }
 }

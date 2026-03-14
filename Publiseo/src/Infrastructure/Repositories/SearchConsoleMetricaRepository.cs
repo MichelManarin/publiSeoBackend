@@ -13,6 +13,14 @@ public sealed class SearchConsoleMetricaRepository : ISearchConsoleMetricaReposi
 
     public SearchConsoleMetricaRepository(PubliseoDbContext context) => _context = context;
 
+    public async Task<bool> ExisteAlgumaMetricaParaBlogsAsync(IEnumerable<Guid> blogIds, CancellationToken cancellationToken = default)
+    {
+        var ids = blogIds.ToList();
+        if (ids.Count == 0) return false;
+        return await _context.SearchConsoleMetricas
+            .AnyAsync(x => ids.Contains(x.BlogDominio.BlogId), cancellationToken);
+    }
+
     public async Task<SearchConsoleMetrica?> ObterPorDominioDataETipoAsync(Guid blogDominioId, DateOnly data, string tipoBusca, CancellationToken cancellationToken = default)
         => await _context.SearchConsoleMetricas
             .FirstOrDefaultAsync(x => x.BlogDominioId == blogDominioId && x.Data == data && x.TipoBusca == tipoBusca, cancellationToken);
