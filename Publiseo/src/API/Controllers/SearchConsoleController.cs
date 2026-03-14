@@ -39,6 +39,25 @@ public class SearchConsoleController : ApiBaseController
     }
 
     /// <summary>
+    /// Retorna a URL de autorização Google para o frontend redirecionar o usuário (OAuth).
+    /// Use este endpoint quando o front chama a API com Authorization (ex.: SPA em outro domínio);
+    /// o front faz GET com o token, recebe a URL e faz window.location.href = data.url.
+    /// </summary>
+    [HttpGet("connect-url")]
+    [Authorize]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult ConnectUrl()
+    {
+        if (UsuarioId == null)
+            return Unauthorized();
+        var state = Guid.NewGuid().ToString("N");
+        _cache.Set(CacheKeyPrefix + state, UsuarioId.Value, StateExpiration);
+        var url = _oauthService.BuildAuthorizationUrl(state);
+        return StandardOk(new { url });
+    }
+
+    /// <summary>
     /// Gera a URL de autorização Google e redireciona o usuário para conectar a conta Search Console (OAuth).
     /// O state é armazenado em cache para associar o callback ao usuário logado.
     /// </summary>
