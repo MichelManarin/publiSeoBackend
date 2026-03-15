@@ -16,6 +16,20 @@ namespace API.Controllers;
 public class ConversorController : ApiBaseController
 {
     /// <summary>
+    /// Lista os leads capturados pelo conversor do blog. Requer token e acesso ao blog.
+    /// </summary>
+    [HttpGet("leads")]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<ConversorLeadItemResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ListarLeads(Guid blogId, CancellationToken cancellationToken)
+    {
+        if (UsuarioId == null)
+            return Unauthorized();
+        var result = await Mediator.Send(new ListarLeadsConversorPorBlogQuery(UsuarioId.Value, blogId), cancellationToken);
+        return StandardOk(result);
+    }
+
+    /// <summary>
     /// Obtém a configuração do conversor do blog. Retorna 404 se não existir.
     /// </summary>
     [HttpGet]

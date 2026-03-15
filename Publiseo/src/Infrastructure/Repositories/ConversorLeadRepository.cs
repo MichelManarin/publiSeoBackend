@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Infrastructure.Repositories;
@@ -18,4 +19,10 @@ public sealed class ConversorLeadRepository : IConversorLeadRepository
         await _context.SaveChangesAsync(cancellationToken);
         return lead;
     }
+
+    public async Task<IReadOnlyList<ConversorLead>> ListarPorBlogIdAsync(Guid blogId, CancellationToken cancellationToken = default)
+        => await _context.ConversorLeads
+            .Where(l => l.Conversor.BlogId == blogId)
+            .OrderByDescending(l => l.DataCriacao)
+            .ToListAsync(cancellationToken);
 }
