@@ -34,11 +34,9 @@ public sealed class GoogleSearchConsoleClient : ISearchConsoleClient
         string? refreshToken = null,
         CancellationToken cancellationToken = default)
     {
-        ICredential credential;
-        if (!string.IsNullOrWhiteSpace(refreshToken))
-            credential = await CreateUserCredentialFromRefreshTokenAsync(refreshToken, cancellationToken);
-        else
-            credential = await CreateServiceAccountCredentialAsync(cancellationToken);
+        ICredential? credential = !string.IsNullOrWhiteSpace(refreshToken)
+            ? await CreateUserCredentialFromRefreshTokenAsync(refreshToken, cancellationToken)
+            : await CreateServiceAccountCredentialAsync(cancellationToken);
 
         if (credential == null)
             return null;
