@@ -32,7 +32,7 @@ public sealed class EditarArtigoCommandHandler : IRequestHandler<EditarArtigoCom
         artigo.Titulo = request.Titulo.Trim();
         artigo.MetaDescription = string.IsNullOrWhiteSpace(request.MetaDescription) ? null : request.MetaDescription.Trim();
         artigo.Conteudo = request.Conteudo;
-        artigo.TipoRascunho = request.TipoRascunho;
+        // TipoRascunho não é alterado na edição: se foi gerado por IA, permanece IA mesmo após alterações do usuário.
         artigo.DataAtualizacao = DateTime.UtcNow;
         artigo.UltimoUsuarioId = request.UsuarioId;
         artigo.ImagemCapaUrl = string.IsNullOrWhiteSpace(request.ImagemCapaUrl) ? null : request.ImagemCapaUrl.Trim();

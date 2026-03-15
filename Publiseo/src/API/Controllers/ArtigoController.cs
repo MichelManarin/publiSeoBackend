@@ -70,7 +70,6 @@ public class ArtigoController : ApiBaseController
             request.Titulo,
             request.MetaDescription,
             request.Conteudo,
-            request.TipoRascunho,
             request.ImagemCapaUrl,
             request.ImagemCapaUnsplashId,
             request.ImagemCapaAttribution), cancellationToken);
@@ -124,11 +123,13 @@ public record CriarArtigoRequest(
     string? ImagemCapaUnsplashId = null,
     string? ImagemCapaAttribution = null);
 
+/// <summary>
+/// Corpo da edição do artigo. Tipo (IA/manual) não pode ser alterado e não é enviado.
+/// </summary>
 public record EditarArtigoRequest(
     string Titulo,
     string? MetaDescription,
     string Conteudo,
-    Domain.Enums.TipoRascunho TipoRascunho,
     string? ImagemCapaUrl = null,
     string? ImagemCapaUnsplashId = null,
     string? ImagemCapaAttribution = null);
