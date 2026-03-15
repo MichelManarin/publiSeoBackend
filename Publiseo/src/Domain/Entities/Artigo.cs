@@ -22,6 +22,13 @@ public class Artigo
     /// <summary>Exclusão lógica: quando true, o artigo não aparece no endpoint público.</summary>
     public bool Excluido { get; set; }
 
+    /// <summary>URL da imagem de capa (ex.: Unsplash com utm_source/utm_medium).</summary>
+    public string? ImagemCapaUrl { get; set; }
+    /// <summary>ID da foto no Unsplash (para referência e atribuição).</summary>
+    public string? ImagemCapaUnsplashId { get; set; }
+    /// <summary>Texto de atribuição (ex.: "Photo by Nome on Unsplash").</summary>
+    public string? ImagemCapaAttribution { get; set; }
+
     public Blog Blog { get; set; } = null!;
     public Usuario UltimoUsuario { get; set; } = null!;
 }

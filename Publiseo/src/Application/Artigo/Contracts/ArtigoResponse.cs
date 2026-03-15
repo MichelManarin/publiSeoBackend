@@ -14,4 +14,7 @@ public record ArtigoResponse(
     DateTime DataCriacao,
     DateTime DataAtualizacao,
     Guid UltimoUsuarioId,
-    bool Excluido);
+    bool Excluido,
+    string? ImagemCapaUrl = null,
+    string? ImagemCapaUnsplashId = null,
+    string? ImagemCapaAttribution = null);

@@ -8,4 +8,6 @@ public record ArtigoPublicoResponse(
     string? Descricao,
     DateTime DataPublicacao,
     string Conteudo,
-    string Autor);
+    string Autor,
+    string? ImagemCapaUrl = null,
+    string? ImagemCapaAttribution = null);

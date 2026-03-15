@@ -35,6 +35,9 @@ public sealed class EditarArtigoCommandHandler : IRequestHandler<EditarArtigoCom
         artigo.TipoRascunho = request.TipoRascunho;
         artigo.DataAtualizacao = DateTime.UtcNow;
         artigo.UltimoUsuarioId = request.UsuarioId;
+        artigo.ImagemCapaUrl = string.IsNullOrWhiteSpace(request.ImagemCapaUrl) ? null : request.ImagemCapaUrl.Trim();
+        artigo.ImagemCapaUnsplashId = string.IsNullOrWhiteSpace(request.ImagemCapaUnsplashId) ? null : request.ImagemCapaUnsplashId.Trim();
+        artigo.ImagemCapaAttribution = string.IsNullOrWhiteSpace(request.ImagemCapaAttribution) ? null : request.ImagemCapaAttribution.Trim();
 
         await _artigoRepository.AtualizarAsync(artigo, cancellationToken);
 
@@ -50,6 +53,9 @@ public sealed class EditarArtigoCommandHandler : IRequestHandler<EditarArtigoCom
             artigo.DataCriacao,
             artigo.DataAtualizacao,
             artigo.UltimoUsuarioId,
-            artigo.Excluido);
+            artigo.Excluido,
+            artigo.ImagemCapaUrl,
+            artigo.ImagemCapaUnsplashId,
+            artigo.ImagemCapaAttribution);
     }
 }

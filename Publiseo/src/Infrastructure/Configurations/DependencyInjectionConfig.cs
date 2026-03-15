@@ -5,6 +5,7 @@ using Application.Data;
 using Application.Dominio.Adapters;
 using Application.Dominio.Contracts;
 using Application.SearchConsole.Abstractions;
+using Application.StockImage.Abstractions;
 using Domain.Interfaces.Repositories;
 using Infrastructure.Auth;
 using Infrastructure.Context;
@@ -13,6 +14,8 @@ using Infrastructure.GoDaddy;
 using Infrastructure.OpenAI;
 using Infrastructure.Repositories;
 using Infrastructure.SearchConsole;
+using Infrastructure.StockImage;
+using Infrastructure.Unsplash;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +65,8 @@ public static class DependencyInjectionConfig
         services.AddScoped<ISearchConsoleMetricaRepository, SearchConsoleMetricaRepository>();
 
         services.Configure<SearchConsoleOptions>(configuration.GetSection(SearchConsoleOptions.SectionName));
+        services.Configure<UnsplashOptions>(configuration.GetSection(UnsplashOptions.SectionName));
+        services.AddHttpClient<IStockImageSearchAdapter, UnsplashStockImageAdapter>();
         services.AddScoped<ISearchConsoleClient, GoogleSearchConsoleClient>();
         services.AddScoped<IGoogleSearchConsoleOAuthService, GoogleSearchConsoleOAuthService>();
         services.AddScoped<ISearchConsoleOAuthRepository, SearchConsoleOAuthRepository>();

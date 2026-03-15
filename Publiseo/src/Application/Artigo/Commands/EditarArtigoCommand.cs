@@ -9,4 +9,7 @@ public record EditarArtigoCommand(
     string Titulo,
     string? MetaDescription,
     string Conteudo,
-    Domain.Enums.TipoRascunho TipoRascunho) : IRequest<ArtigoResponse?>;
+    Domain.Enums.TipoRascunho TipoRascunho,
+    string? ImagemCapaUrl = null,
+    string? ImagemCapaUnsplashId = null,
+    string? ImagemCapaAttribution = null) : IRequest<ArtigoResponse?>;

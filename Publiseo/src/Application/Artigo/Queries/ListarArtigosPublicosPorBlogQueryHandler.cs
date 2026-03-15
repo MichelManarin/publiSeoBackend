@@ -41,7 +41,9 @@ public sealed class ListarArtigosPublicosPorBlogQueryHandler : IRequestHandler<L
                 a.MetaDescription,
                 a.DataCriacao,
                 a.Conteudo,
-                autor);
+                autor,
+                a.ImagemCapaUrl,
+                a.ImagemCapaAttribution);
         }).ToList();
     }
 }

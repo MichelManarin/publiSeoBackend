@@ -45,7 +45,10 @@ public class ArtigoController : ApiBaseController
             request.Titulo,
             request.MetaDescription,
             request.Conteudo,
-            request.TipoRascunho), cancellationToken);
+            request.TipoRascunho,
+            request.ImagemCapaUrl,
+            request.ImagemCapaUnsplashId,
+            request.ImagemCapaAttribution), cancellationToken);
         if (result == null)
             return new ObjectResult(ApiResponse<object?>.Fail(StatusCodes.Status400BadRequest, "Blog ou usuário não encontrado."))
                 { StatusCode = StatusCodes.Status400BadRequest };
@@ -67,7 +70,10 @@ public class ArtigoController : ApiBaseController
             request.Titulo,
             request.MetaDescription,
             request.Conteudo,
-            request.TipoRascunho), cancellationToken);
+            request.TipoRascunho,
+            request.ImagemCapaUrl,
+            request.ImagemCapaUnsplashId,
+            request.ImagemCapaAttribution), cancellationToken);
         if (result == null)
             return StandardNotFound("Artigo ou usuário não encontrado.");
         return StandardOk(result);
@@ -113,10 +119,16 @@ public record CriarArtigoRequest(
     string Titulo,
     string? MetaDescription,
     string Conteudo,
-    Domain.Enums.TipoRascunho TipoRascunho);
+    Domain.Enums.TipoRascunho TipoRascunho,
+    string? ImagemCapaUrl = null,
+    string? ImagemCapaUnsplashId = null,
+    string? ImagemCapaAttribution = null);
 
 public record EditarArtigoRequest(
     string Titulo,
     string? MetaDescription,
     string Conteudo,
-    Domain.Enums.TipoRascunho TipoRascunho);
+    Domain.Enums.TipoRascunho TipoRascunho,
+    string? ImagemCapaUrl = null,
+    string? ImagemCapaUnsplashId = null,
+    string? ImagemCapaAttribution = null);

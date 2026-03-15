@@ -27,6 +27,9 @@ public sealed class ListarArtigosQueryHandler : IRequestHandler<ListarArtigosQue
             a.DataCriacao,
             a.DataAtualizacao,
             a.UltimoUsuarioId,
-            a.Excluido)).ToList();
+            a.Excluido,
+            a.ImagemCapaUrl,
+            a.ImagemCapaUnsplashId,
+            a.ImagemCapaAttribution)).ToList();
     }
 }

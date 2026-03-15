@@ -25,6 +25,9 @@ public class ArtigoMap : IEntityTypeConfiguration<Artigo>
         builder.Property(x => x.DataAtualizacao).IsRequired();
         builder.Property(x => x.UltimoUsuarioId).IsRequired();
         builder.Property(x => x.Excluido).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.ImagemCapaUrl).HasMaxLength(2000);
+        builder.Property(x => x.ImagemCapaUnsplashId).HasMaxLength(100);
+        builder.Property(x => x.ImagemCapaAttribution).HasMaxLength(500);
 
         builder.HasOne(x => x.Blog)
             .WithMany()

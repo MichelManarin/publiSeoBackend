@@ -47,7 +47,10 @@ public sealed class CriarArtigoCommandHandler : IRequestHandler<CriarArtigoComma
             TentativasGeracao = 0,
             DataCriacao = agora,
             DataAtualizacao = agora,
-            UltimoUsuarioId = request.UsuarioId
+            UltimoUsuarioId = request.UsuarioId,
+            ImagemCapaUrl = string.IsNullOrWhiteSpace(request.ImagemCapaUrl) ? null : request.ImagemCapaUrl.Trim(),
+            ImagemCapaUnsplashId = string.IsNullOrWhiteSpace(request.ImagemCapaUnsplashId) ? null : request.ImagemCapaUnsplashId.Trim(),
+            ImagemCapaAttribution = string.IsNullOrWhiteSpace(request.ImagemCapaAttribution) ? null : request.ImagemCapaAttribution.Trim()
         };
 
         await _artigoRepository.InserirAsync(artigo, cancellationToken);
@@ -64,6 +67,9 @@ public sealed class CriarArtigoCommandHandler : IRequestHandler<CriarArtigoComma
             artigo.DataCriacao,
             artigo.DataAtualizacao,
             artigo.UltimoUsuarioId,
-            false);
+            false,
+            artigo.ImagemCapaUrl,
+            artigo.ImagemCapaUnsplashId,
+            artigo.ImagemCapaAttribution);
     }
 }
