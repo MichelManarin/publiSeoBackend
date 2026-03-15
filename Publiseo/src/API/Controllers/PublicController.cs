@@ -3,6 +3,9 @@ using Application.Artigo.Contracts;
 using Application.Artigo.Queries;
 using Application.Blog.Contracts;
 using Application.Blog.Queries;
+using Application.Conversor.Commands;
+using Application.Conversor.Contracts;
+using Application.Conversor.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,5 +49,41 @@ public class PublicController : ApiBaseController
         if (result == null)
             return StandardNotFound("Blog não encontrado.");
         return StandardOk(result);
+    }
+
+    /// <summary>
+    /// Obtém a configuração pública do conversor do blog (por ExternalId). Se ativo, retorna perguntas e tipo de finalização para o front renderizar o widget.
+    /// </summary>
+    [HttpGet("blog/{externalId:guid}/conversor")]
+    [ProducesResponseType(typeof(ApiResponse<ConversorPublicoResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ObterConversor(Guid externalId, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ObterConversorPublicoPorBlogQuery(externalId), cancellationToken);
+        if (result == null)
+            return StandardNotFound("Conversor não encontrado ou inativo para este blog.");
+        return StandardOk(result);
+    }
+
+    /// <summary>
+    /// Registra um lead do conversor (quando o usuário completa o fluxo no widget).
+    /// </summary>
+    [HttpPost("conversor/lead")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RegistrarLead([FromBody] RegistrarConversorLeadRequest request, CancellationToken cancellationToken)
+    {
+        var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var ok = await Mediator.Send(new RegistrarConversorLeadCommand(
+            request.BlogExternalId,
+            request.NomeCompleto,
+            request.Telefone,
+            request.Respostas ?? Array.Empty<string>(),
+            request.ArtigoId,
+            ip), cancellationToken);
+        if (!ok)
+            return StandardNotFound("Conversor não encontrado ou inativo para este blog.");
+        return NoContent();
     }
 }

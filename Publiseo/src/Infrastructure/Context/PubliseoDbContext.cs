@@ -19,6 +19,9 @@ public class PubliseoDbContext : DbContext
     public DbSet<Artigo> Artigos => Set<Artigo>();
     public DbSet<SearchConsoleMetrica> SearchConsoleMetricas => Set<SearchConsoleMetrica>();
     public DbSet<SearchConsoleOAuth> SearchConsoleOAuth => Set<SearchConsoleOAuth>();
+    public DbSet<Conversor> Conversores => Set<Conversor>();
+    public DbSet<ConversorPergunta> ConversorPerguntas => Set<ConversorPergunta>();
+    public DbSet<ConversorLead> ConversorLeads => Set<ConversorLead>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
