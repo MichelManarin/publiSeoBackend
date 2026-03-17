@@ -58,10 +58,14 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
             keyword = keyword.Trim(),
             location_code = loc,
             language_code = lang,
+            depth = 4,
             limit = limitClamped,
             offset,
             include_seed_keyword = true,
-            include_serp_info = true
+            include_serp_info = true,
+            ignore_synonyms = false,
+            include_clickstream_data = false,
+            replace_with_core_keyword = false
         }};
 
         var request = new HttpRequestMessage(HttpMethod.Post, RelatedKeywordsPath);
