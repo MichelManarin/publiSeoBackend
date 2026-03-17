@@ -1,4 +1,5 @@
 using Application.Blog.Contracts;
+using Application.BlogIntegracao.Contracts;
 using Domain.Interfaces.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -10,13 +11,16 @@ namespace Application.Blog.Queries;
 public sealed class ObterBlogPorDominioQueryHandler : IRequestHandler<ObterBlogPorDominioQuery, BlogPorDominioResponse?>
 {
     private readonly IBlogDominioRepository _blogDominioRepository;
+    private readonly IBlogIntegracaoRepository _integracaoRepository;
     private readonly ILogger<ObterBlogPorDominioQueryHandler> _logger;
 
     public ObterBlogPorDominioQueryHandler(
         IBlogDominioRepository blogDominioRepository,
+        IBlogIntegracaoRepository integracaoRepository,
         ILogger<ObterBlogPorDominioQueryHandler> logger)
     {
         _blogDominioRepository = blogDominioRepository;
+        _integracaoRepository = integracaoRepository;
         _logger = logger;
     }
 
@@ -27,6 +31,8 @@ public sealed class ObterBlogPorDominioQueryHandler : IRequestHandler<ObterBlogP
         if (blogDominio?.Blog == null)
             return null;
         var blog = blogDominio.Blog;
-        return new BlogPorDominioResponse(blog.ExternalId, blog.Nome, blog.Nicho, blog.Descricao);
+        var integracoes = await _integracaoRepository.ListarPorBlogExternalIdAsync(blog.ExternalId, cancellationToken);
+        var integracoesDto = integracoes.Select(i => new IntegracaoPublicaItemDto(i.Tipo.ToString(), i.Valor)).ToList();
+        return new BlogPorDominioResponse(blog.ExternalId, blog.Nome, blog.Nicho, blog.Descricao, integracoesDto);
     }
 }
