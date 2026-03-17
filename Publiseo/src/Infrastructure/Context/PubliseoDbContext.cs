@@ -22,6 +22,7 @@ public class PubliseoDbContext : DbContext
     public DbSet<Conversor> Conversores => Set<Conversor>();
     public DbSet<ConversorPergunta> ConversorPerguntas => Set<ConversorPergunta>();
     public DbSet<ConversorLead> ConversorLeads => Set<ConversorLead>();
+    public DbSet<BlogIntegracao> BlogIntegracoes => Set<BlogIntegracao>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

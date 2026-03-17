@@ -3,6 +3,8 @@ using Application.Artigo.Contracts;
 using Application.Artigo.Queries;
 using Application.Blog.Contracts;
 using Application.Blog.Queries;
+using Application.BlogIntegracao.Contracts;
+using Application.BlogIntegracao.Queries;
 using Application.Conversor.Commands;
 using Application.Conversor.Contracts;
 using Application.Conversor.Queries;
@@ -48,6 +50,17 @@ public class PublicController : ApiBaseController
         var result = await Mediator.Send(new ListarArtigosPublicosPorBlogQuery(externalId), cancellationToken);
         if (result == null)
             return StandardNotFound("Blog não encontrado.");
+        return StandardOk(result);
+    }
+
+    /// <summary>
+    /// Lista integrações do blog (tags/snippets para &lt;head&gt;) por ExternalId. Para o front injetar no &lt;head&gt; da página.
+    /// </summary>
+    [HttpGet("blog/{externalId:guid}/integrations")]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<IntegracaoPublicaItemDto>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ListarIntegracoesPorBlog(Guid externalId, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ObterIntegracoesPublicasPorBlogQuery(externalId), cancellationToken);
         return StandardOk(result);
     }
 

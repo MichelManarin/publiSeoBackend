@@ -64,6 +64,7 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IDominioRepository, DominioRepository>();
         services.AddScoped<IBlogDominioRepository, BlogDominioRepository>();
+        services.AddScoped<IBlogIntegracaoRepository, BlogIntegracaoRepository>();
         services.AddScoped<IConversorRepository, ConversorRepository>();
         services.AddScoped<IConversorLeadRepository, ConversorLeadRepository>();
         services.AddScoped<ISearchConsoleMetricaRepository, SearchConsoleMetricaRepository>();
