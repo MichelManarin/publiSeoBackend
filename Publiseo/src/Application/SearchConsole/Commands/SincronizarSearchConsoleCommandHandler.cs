@@ -37,7 +37,7 @@ public sealed class SincronizarSearchConsoleCommandHandler : IRequestHandler<Sin
 
     public async Task<SincronizarSearchConsoleResult> Handle(SincronizarSearchConsoleCommand request, CancellationToken cancellationToken)
     {
-        var dataAlvo = request.DataAlvo ?? DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2));
+        var dataAlvo = request.DataAlvo ?? DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-3));
         var usuariosOAuth = await _oauthRepository.ListarTodosComTokenAsync(cancellationToken);
         var dominiosProcessados = 0;
         var metricasSalvas = 0;

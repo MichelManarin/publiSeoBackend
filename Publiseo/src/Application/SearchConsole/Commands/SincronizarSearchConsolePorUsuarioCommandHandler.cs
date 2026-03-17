@@ -12,7 +12,7 @@ namespace Application.SearchConsole.Commands;
 public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestHandler<SincronizarSearchConsolePorUsuarioCommand, SincronizarSearchConsoleResult>
 {
     private const string TipoBuscaPadrao = "web";
-    private const int DiasAtrasPadrao = 2;
+    private const int DiasAtrasPadrao = 3;
     private const int PrimeiraSincronizacaoDias = 90;
     private readonly IBlogRepository _blogRepository;
     private readonly IBlogDominioRepository _blogDominioRepository;
@@ -129,7 +129,7 @@ public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestH
     }
 
     /// <summary>
-    /// Retorna as datas a sincronizar: uma única data (2 dias atrás) ou os últimos 90 dias na primeira sincronização.
+    /// Retorna as datas a sincronizar: uma única data (3 dias atrás) ou os últimos 90 dias na primeira sincronização.
     /// </summary>
     private static IReadOnlyList<DateOnly> ObterDatasParaSincronizar(DateOnly? dataAlvoExplicita, DateOnly dataPadrao, bool primeiraSincronizacao)
     {
