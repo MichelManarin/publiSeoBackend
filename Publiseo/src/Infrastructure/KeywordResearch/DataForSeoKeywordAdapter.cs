@@ -139,7 +139,10 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
     private static IReadOnlyList<MonthlySearchVolumeDto>? MapMonthlySearches(List<DataForSeoMonthlySearchDto>? list)
     {
         if (list == null || list.Count == 0) return null;
-        return list.Select(m => new MonthlySearchVolumeDto(m.Year, m.Month, m.SearchVolume)).ToList();
+        return list
+            .Where(m => m.Year.HasValue && m.Month.HasValue)
+            .Select(m => new MonthlySearchVolumeDto(m.Year!.Value, m.Month!.Value, m.SearchVolume ?? 0))
+            .ToList();
     }
 
     private sealed class DataForSeoTasksWrapper
@@ -193,13 +196,13 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
     private sealed class DataForSeoKeywordInfoDto
     {
         [JsonPropertyName("search_volume")]
-        public int SearchVolume { get; set; }
+        public int? SearchVolume { get; set; }
         [JsonPropertyName("competition")]
-        public decimal Competition { get; set; }
+        public decimal? Competition { get; set; }
         [JsonPropertyName("competition_level")]
         public string? CompetitionLevel { get; set; }
         [JsonPropertyName("cpc")]
-        public decimal Cpc { get; set; }
+        public decimal? Cpc { get; set; }
         [JsonPropertyName("low_top_of_page_bid")]
         public decimal? LowTopOfPageBid { get; set; }
         [JsonPropertyName("high_top_of_page_bid")]
@@ -213,11 +216,11 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
     private sealed class DataForSeoMonthlySearchDto
     {
         [JsonPropertyName("year")]
-        public int Year { get; set; }
+        public int? Year { get; set; }
         [JsonPropertyName("month")]
-        public int Month { get; set; }
+        public int? Month { get; set; }
         [JsonPropertyName("search_volume")]
-        public int SearchVolume { get; set; }
+        public int? SearchVolume { get; set; }
     }
 
     private sealed class DataForSeoTrendDto
