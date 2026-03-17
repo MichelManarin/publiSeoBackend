@@ -49,6 +49,10 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
         var lang = languageCode ?? _options.DefaultLanguageCode;
         var limitClamped = Math.Clamp(limit, 1, 1000);
 
+        _logger.LogInformation(
+            "DataForSEO: pesquisando keyword={Keyword}, offset={Offset}, limit={Limit}, locationCode={LocationCode}, languageCode={LanguageCode}.",
+            keyword.Trim(), offset, limitClamped, loc, lang);
+
         var payload = new[] { new
         {
             keyword = keyword.Trim(),
@@ -82,20 +86,49 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogWarning("DataForSEO: API retornou {StatusCode}.", response.StatusCode);
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+            _logger.LogWarning(
+                "DataForSEO: API retornou {StatusCode}. Body (primeiros 500 chars): {BodyPreview}",
+                response.StatusCode,
+                errorBody.Length > 500 ? errorBody[..500] : errorBody);
             return null;
         }
+
+        var json = await response.Content.ReadAsStringAsync(cancellationToken);
+        _logger.LogDebug("DataForSEO: resposta OK, body length={Length}.", json.Length);
 
         var jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             NumberHandling = JsonNumberHandling.AllowReadingFromString
         };
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-        var wrapper = JsonSerializer.Deserialize<DataForSeoTasksWrapper>(json, jsonOptions);
-        var taskResult = wrapper?.Tasks?.FirstOrDefault();
-        if (taskResult?.Result == null || taskResult.Result.Count == 0)
+
+        DataForSeoTasksWrapper? wrapper;
+        try
+        {
+            wrapper = JsonSerializer.Deserialize<DataForSeoTasksWrapper>(json, jsonOptions);
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "DataForSEO: falha ao deserializar JSON. Path: {Path}. Preview: {Preview}",
+                ex.Path, json.Length > 300 ? json[..300] : json);
             return null;
+        }
+
+        var taskResult = wrapper?.Tasks?.FirstOrDefault();
+        if (taskResult == null)
+        {
+            _logger.LogWarning("DataForSEO: tasks vazio ou null. Preview: {Preview}",
+                json.Length > 300 ? json[..300] : json);
+            return null;
+        }
+
+        if (taskResult.Result == null || taskResult.Result.Count == 0)
+        {
+            _logger.LogWarning("DataForSEO: result vazio. Task StatusCode={StatusCode}, StatusMessage={Message}.",
+                taskResult.StatusCode, taskResult.StatusMessage);
+            return null;
+        }
 
         if (taskResult.StatusCode != 20000)
         {
@@ -108,6 +141,11 @@ public sealed class DataForSeoKeywordAdapter : IKeywordResearchAdapter
             ? result.Items.Where(i => i.KeywordData != null).Select(i => MapItem(i.KeywordData!.Keyword, i.KeywordData)).ToList()
             : new List<KeywordResearchItemDto>();
         var totalCount = result.TotalCount;
+
+        _logger.LogInformation(
+            "DataForSEO: sucesso. SeedKeyword={SeedKeyword}, TotalCount={TotalCount}, ItemsRetornados={ItemsCount}.",
+            result.SeedKeyword, totalCount, items.Count);
+
         return new KeywordResearchResultDto(result.SeedKeyword ?? keyword.Trim(), totalCount, items);
     }
 
