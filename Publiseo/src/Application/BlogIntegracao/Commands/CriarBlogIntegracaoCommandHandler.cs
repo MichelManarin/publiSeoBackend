@@ -31,7 +31,7 @@ public sealed class CriarBlogIntegracaoCommandHandler : IRequestHandler<CriarBlo
         var valor = request.Valor?.Trim() ?? string.Empty;
         var now = DateTime.UtcNow;
 
-        var integracao = new BlogIntegracao
+        var integracao = new Domain.Entities.BlogIntegracao
         {
             Id = Guid.NewGuid(),
             BlogId = request.BlogId,
