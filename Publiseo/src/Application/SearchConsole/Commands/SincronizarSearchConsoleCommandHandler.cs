@@ -52,33 +52,46 @@ public sealed class SincronizarSearchConsoleCommandHandler : IRequestHandler<Sin
                 foreach (var dominio in dominios)
                 {
                     dominiosProcessados++;
-                    var dto = await _searchConsoleClient.ObterMetricasAgregadasAsync(
-                        dominio.NomeDominio,
-                        dataAlvo,
-                        TipoBuscaPadrao,
-                        oauth.RefreshToken,
-                        cancellationToken);
+                    try
+                    {
+                        var dto = await _searchConsoleClient.ObterMetricasAgregadasAsync(
+                            dominio.NomeDominio,
+                            dataAlvo,
+                            TipoBuscaPadrao,
+                            oauth.RefreshToken,
+                            cancellationToken);
 
-                    if (dto == null)
+                        if (dto == null)
+                        {
+                            falhas++;
+                            _logger.LogWarning(
+                                "Sincronização Search Console: sem dados para domínio {NomeDominio} em {Data} (usuário {UsuarioId}).",
+                                dominio.NomeDominio, dataAlvo, oauth.UsuarioId);
+                            continue;
+                        }
+
+                        var metrica = new SearchConsoleMetrica
+                        {
+                            Id = Guid.NewGuid(),
+                            BlogDominioId = dominio.Id,
+                            Data = dataAlvo,
+                            TipoBusca = TipoBuscaPadrao,
+                            Impressoes = dto.Impressoes,
+                            Cliques = dto.Cliques,
+                            Ctr = dto.Ctr,
+                            PosicaoMedia = dto.PosicaoMedia,
+                            DataSincronizacao = DateTime.UtcNow
+                        };
+                        await _metricaRepository.InserirOuAtualizarAsync(metrica, cancellationToken);
+                        metricasSalvas++;
+                    }
+                    catch (Exception ex)
                     {
                         falhas++;
-                        continue;
+                        _logger.LogWarning(ex,
+                            "Sincronização Search Console: falha no domínio {NomeDominio} em {Data} (usuário {UsuarioId}). Seguindo para o próximo. Motivo: {Motivo}",
+                            dominio.NomeDominio, dataAlvo, oauth.UsuarioId, ex.Message);
                     }
-
-                    var metrica = new SearchConsoleMetrica
-                    {
-                        Id = Guid.NewGuid(),
-                        BlogDominioId = dominio.Id,
-                        Data = dataAlvo,
-                        TipoBusca = TipoBuscaPadrao,
-                        Impressoes = dto.Impressoes,
-                        Cliques = dto.Cliques,
-                        Ctr = dto.Ctr,
-                        PosicaoMedia = dto.PosicaoMedia,
-                        DataSincronizacao = DateTime.UtcNow
-                    };
-                    await _metricaRepository.InserirOuAtualizarAsync(metrica, cancellationToken);
-                    metricasSalvas++;
                 }
             }
         }

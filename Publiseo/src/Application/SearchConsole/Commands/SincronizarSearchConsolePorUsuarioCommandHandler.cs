@@ -93,20 +93,30 @@ public sealed class SincronizarSearchConsolePorUsuarioCommandHandler : IRequestH
                         continue;
                     }
 
-                    var metrica = new SearchConsoleMetrica
+                    try
                     {
-                        Id = Guid.NewGuid(),
-                        BlogDominioId = dominio.Id,
-                        Data = dataAlvo,
-                        TipoBusca = TipoBuscaPadrao,
-                        Impressoes = dto.Impressoes,
-                        Cliques = dto.Cliques,
-                        Ctr = dto.Ctr,
-                        PosicaoMedia = dto.PosicaoMedia,
-                        DataSincronizacao = DateTime.UtcNow
-                    };
-                    await _metricaRepository.InserirOuAtualizarAsync(metrica, cancellationToken);
-                    metricasSalvas++;
+                        var metrica = new SearchConsoleMetrica
+                        {
+                            Id = Guid.NewGuid(),
+                            BlogDominioId = dominio.Id,
+                            Data = dataAlvo,
+                            TipoBusca = TipoBuscaPadrao,
+                            Impressoes = dto.Impressoes,
+                            Cliques = dto.Cliques,
+                            Ctr = dto.Ctr,
+                            PosicaoMedia = dto.PosicaoMedia,
+                            DataSincronizacao = DateTime.UtcNow
+                        };
+                        await _metricaRepository.InserirOuAtualizarAsync(metrica, cancellationToken);
+                        metricasSalvas++;
+                    }
+                    catch (Exception ex)
+                    {
+                        falhas++;
+                        _logger.LogWarning(ex,
+                            "Sincronização Search Console por usuário: falha ao salvar métricas para domínio {NomeDominio} em {Data}. Seguindo para o próximo. Motivo: {Motivo}",
+                            dominio.NomeDominio, dataAlvo, ex.Message);
+                    }
                 }
             }
         }
